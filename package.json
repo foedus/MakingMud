@@ -1,0 +1,10 @@
+{ 
+  "name": "MakingMud",
+  "description": "A fun game!",
+  "private": true,
+  "version": "0.0.0",
+	 "dependencies": {
+		"express": "3.0.6",
+		"engine.io": "0.3.10" 
+	}
+}
