@@ -1,9 +1,13 @@
 var engine = require('engine.io');
 var gameserver = engine.listen(8083, function() {
-	console.log('Gameserver listening on port 8083.');
+	console.log('Gameserver listening on port 8083...');
 });
 
-// Create handler for user input
+// room
+
+// user
+
+// mongo db
 
 gameserver.on('connection', function (socket) {
 	socket.on('message', function (data) {
@@ -12,3 +16,4 @@ gameserver.on('connection', function (socket) {
 		}
 	});
 });
+
