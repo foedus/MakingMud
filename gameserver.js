@@ -11,28 +11,62 @@ var gameserver = engine.listen(8083, function() {
 gameserver.on('connection', function (socket) {
 	socket.on('message', function (data) {
 		data = JSON.parse(data);
-		if (data.type === 'login') {
-			var user = new UserTools.User(data.userName);
-			user.getUser(user.userName, function (err,user) {
-				var room = new RoomTools.Room(user.roomId);
-				room.getRoom(room._id, function (err,room) {
-					var message = {
-						type: 'room',
-						title: room.title,
-						description: room.description
-					}
-					socket.send(JSON.stringify(message));
+		switch (data.type) {
+			case 'login':
+				var player = new UserTools.User(data.userName);
+				player.getUser(player.userName, function (err, user) {
+					socket.player = player;
+					var location = new RoomTools.Room(user.roomId);
+					location.getRoom(location._id, function (err, room) {
+						var message = {
+							type: 'room',
+							title: room.title,
+							description: room.description
+						}
+						socket.location = location;
+						socket.send(JSON.stringify(message));
+					});
 				});
-			});
-		} else if (data.type == 'command') {	
-			if (/^say .*/.test(data.data)) {
-				var message = {
-					type: 'say',
-					content: data
+				break;	
+			case 'command':
+				if (data.data === 'north' || data.data === 'south') {
+					var direction = data.data;
+					var location = socket.location;
+					var player = socket.player;
+					location.checkExits(direction, function(err, test) {
+						if (test) {
+							var newRoomId = location[direction];
+							player.setRoom(newRoomId, function (err,junk) {
+								console.log(location._id);
+								location.getRoom(newRoomId, function (err, room) {
+									socket.location = location;
+									var message = {
+										type: 'room',
+										title: room.title,
+										description: room.description
+									}
+									socket.send(JSON.stringify(message));
+								});
+							});
+						}
+					});	
 				}
-			socket.send(JSON.stringify(data));
-			}
+				if (/^say .*/.test(data.data)) {
+					var message = {
+						type: 'say',
+						content: data
+					}
+				socket.send(JSON.stringify(data));
+				}
+				break;	
+			default:
+				console.log(data);
+				var message = {
+					type: 'error',
+					content: 'Message not recongnized'
+				}
+				socket.send(JSON.stringify(data));
+				break;	
 		}
 	});
 });
-
