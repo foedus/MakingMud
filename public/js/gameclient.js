@@ -32,7 +32,7 @@ socket.on('open', function () {
 function processCommand (command) {
 	var newElement = document.createElement('div');
 	if (command.type === 'room') {
-		newElement.innerText = command.title + "\n" + command.description + "\n";
+		newElement.innerText = command.title + "\n" + command.description + "\n\n";
 	}
 	contentDiv.appendChild(newElement);
 };
