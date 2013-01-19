@@ -1,6 +1,4 @@
 var engine = require('engine.io');
-var MongoClient = require('mongodb').MongoClient;
-var ObjectID = require('mongodb').ObjectID;
 var RoomTools = require('./lib/room');
 var UserTools = require('./lib/user');
 
