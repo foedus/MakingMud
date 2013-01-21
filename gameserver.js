@@ -89,13 +89,13 @@ gameserver.on('connection', function (socket) {
 		var newArray = [
 		{
 			'triggers': dirArray,
-			'action': function(){
+			'action': function() {
 				// Code for what to do on dirArray class triggers
 			};
 		},
 		{
 			'triggers': combatArray,
-			'action': function(){
+			'action': function() {
 				// Code for what to do on combatArray class triggers
 			};
 		}
