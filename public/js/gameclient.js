@@ -25,19 +25,27 @@ commandInput.addEventListener('keypress', function(key) {
 
 // Opens socket as a client connects to the game server
 socket.on('open', function () {
-	var userName = prompt('What is your name?');
+	var name = prompt('What is your name?');
 	var command = {
 		'type':'login',
-		'userName':userName
+		'data':name
 	}
 	socket.send(JSON.stringify(command));
 		
 	socket.on('message', function (data) {
 		var command = JSON.parse(data);
-		// Can attach username to command - i.e. command.user = userName
+		// Can attach username to command - i.e. command.user = userName so that you can detect who is saying it and put 'you' instead
 		processCommand(command);
 	});
 });
+
+// // Runs appropriate actions once user logs out of game
+// socket.on('close', function() {
+// 	var command = {
+// 		'type':'logout'
+// 	}
+// 	socket.send(JSON.stringify(command));
+// });
 
 function processCommand (command) {
 	var newElement = document.createElement('div');

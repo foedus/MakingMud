@@ -1,40 +1,32 @@
-var MongoClient = require('mongodb').MongoClient;
+var mongoose = require('mongoose');
 
-var Room = function (title) {
-	this.title = title;
-	this.description = '';
-	this.exits = {};
-	this.north = '';
-	this.south = '';
-	this.east = '';
-	this.west = '';
-	this.northeast = '';
-	this.northwest = '';
-	this.southeast = '';
-	this.southwest = '';
-	this.up = '';
-	this.down = '';
-	this.people = [];
-	this.items = [];
-	this.npcs = [];
-}
-
-var room1 = new Room('TownSquare North');
-room1.description = 'From the north side of the townsquare you can see the center of the townsquare to the south.';
-
-var room2 = new Room('TownSquare South');
-room2.description = 'From the south side of the townsquare you can see the center of the townsquare to the north.';
-
-MongoClient.connect('mongodb://localhost:27017/MakingMud', function(err, db) {
-	var rooms = db.collection('rooms');
-	rooms.insert(room1, function(err,result) {
-		if (!err) {
-			console.log('Success!');
-		}
-	});
-	rooms.insert(room2, function(err,result) {
-		if (!err) {
-			console.log('Success!');
-		}
-	});
+mongoose.connect('mongodb://localhost/MakingMud');
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function () {
+	console.log('Mongoose connected!');
 });
+
+var RoomModel = require('./models/roomModel'); // Bring in Room and User models for use by functions
+
+// var room = new RoomModel({
+// 	title: 'Town Square West',
+// 	description: 'You find yourself on the western edge of the crowded marketplace.',
+// 	exits: {
+// 		'east':'510419ce7478d44180000001'
+// 	}
+// });
+
+RoomModel.update({_id:'510419ce7478d44180000001'}, {exits: {'east': '51041a2e2aeeb24780000001', 'west': '51041a51e6d8b44a80000001'}}, function(err, room) {
+	if (err) {
+		return console.log(err);
+	}
+	return console.log('Update Success!');
+});
+
+// room.save(function(err) {
+// 	if (err) {
+// 		return console.error(err);
+// 	}
+// 	console.log('Room created!');
+// });
