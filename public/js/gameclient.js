@@ -2,6 +2,8 @@ var commandInput = document.querySelector('#input > input');
 var contentDiv = document.querySelector('#content');
 var socket = new eio.Socket('ws://localhost:8083/');
 
+var name;
+
 commandInput.focus();
 
 commandInput.addEventListener('keypress', function(key) {
@@ -25,7 +27,7 @@ commandInput.addEventListener('keypress', function(key) {
 
 // Opens socket as a client connects to the game server
 socket.on('open', function () {
-	var name = prompt('What is your name?');
+	name = prompt('What is your name?');
 	var command = {
 		'type':'login',
 		'data':name
@@ -50,15 +52,22 @@ socket.on('open', function () {
 function processCommand (command) {
 	var newElement = document.createElement('div');
 	if (command.type === 'room') {
-		newElement.innerText = command.title + "\n" + command.description + "\n" + ">";
+		newElement.innerText = command.title + "\n" + command.description + "\n" + 'exits: ' + command.exits + "\n" + 'who: ' + command.who;
 	}
 	if (command.type === 'say') {
-		// Need to add that if the person saying something is you, it says "you say"...
-		newElement.innerText = command.name + ': ' + command.content + "\n" + ">";
+		if (command.name == name) {
+			newElement.innerText = 'You say, "' + command.content + '"';
+		} else {
+			newElement.innerText = command.name + ' says, "' + command.content + '"';
+		}
 	}
 	if (command.type === 'error') {
-		// Need to add that if the person saying something is you, it says "you say"...
-		newElement.innerText = command.content + "\n" + ">";
+		newElement.innerText = command.content;
 	}
+	if (command.type === 'arrival') {
+		if(command.name == name) return;
+		newElement.innerText = command.content;
+	}
+	newElement.innerText = newElement.innerText + '\n' + '>';
 	contentDiv.appendChild(newElement);
 };

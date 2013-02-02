@@ -1,9 +1,10 @@
 var engine = require('engine.io');
-var GameMaster = require('./lib/gamemaster').GameMaster;
-var RoomTools = require('./lib/room');
-var UserTools = require('./lib/user');
 var EventEmitter = require('events').EventEmitter;
 var mongoose = require('mongoose');
+
+var GameMaster = require('./lib/gamemaster').GameMaster;
+var User = require('./models/userModel');
+var Room = require('./models/roomModel'); // Bring in Room and User models for use by functions
 
 // Connect to DB
 mongoose.connect('mongodb://localhost/MakingMud');
@@ -13,11 +14,10 @@ db.once('open', function () {
 	console.log('Mongoose connected!');
 });
 
-var RoomModel = require('./models/roomModel'); // Bring in Room and User models for use by functions
-var UserModel = require('./models/userModel');
-
+// Initializes GameMaster
 var gameMaster = new GameMaster();
 
+// Starts gameserver
 var gameserver = engine.listen(8083, function() {
 	console.log('Gameserver listening on port 8083...');
 });
@@ -34,16 +34,13 @@ gameserver.on('connection', function (socket) {
 	});
 	
 	messageEmitter.on('login', function(data) {
-		// TO make this work, we need to do a find one at a higher level, so that the user is an instance of the user model and therefore has the save method. We will fix this later and then make it look pretty by putting it a method in gameMaster.
-		var user = new UserTools.User(data);
-		user.loadUserInfo(user.name, function(err) {
+		User.findOne({name: data}, function(err, user) {
 			if (err) {
 				return console.error(err);
 			}
-			console.log(user);
-			gameMaster.users.push(user);
 			user.online = true;
-			
+			user.socket = socket; // Need to find best way to do this but it works
+			gameMaster.users.push(user);			
 			user.save(function(err) {
 				if (err) {
 					return console.error(err);
@@ -57,10 +54,13 @@ gameserver.on('connection', function (socket) {
 						return console.log('User did not have a room.');
 					}	
 					/* Now we send the first room message: */
+					
 					var message = {
 						type: 'room',
 						title: room.title,
-						description: room.description
+						description: room.description,
+						exits: room.getExits(),
+						who: room.getUsers()
 					} 
 					/*
 					We could do this in a user.setRoom method.
@@ -70,20 +70,30 @@ gameserver.on('connection', function (socket) {
 					messageEmitter.room = room._id;
 					gameMaster.userRoomAction(user, messageEmitter.room, 'add');
 				});
-			});
+			});	
 		});	
 	});
 
 	messageEmitter.on('say', function(data) {
+		var user = messageEmitter.user;
 		var message = {
 			type: 'say',
-			name: messageEmitter.user.name,
+			name: user.name,
 			content: data
 		};
-		var room = gameMaster.getRoom(messageEmitter.room);
-		
-		room.users.forEach(function(user) {
-			user.socket.send(JSON.stringify(message));
+		console.log(messageEmitter.room);
+		gameMaster.getRoom(messageEmitter.room, function(err, room) {
+			if (err) {
+				return console.error(err);
+			}
+			if (!room) {
+				return console.log('No room found.');
+			}
+			room.users.forEach(function(user) {
+				user.socket.send(JSON.stringify(message));
+			});
+			console.log('********GM************')
+			console.log(gameMaster);
 		});
 		
 		/* foreach()
@@ -160,7 +170,9 @@ gameserver.on('connection', function (socket) {
 				var message = {
 					type: 'room',
 					title: room.title,
-					description: room.description
+					description: room.description,
+					exits: room.getExits(),
+					who: room.getUsers()
 				};
 				messageEmitter.room = room._id;
 				gameMaster.userRoomAction(user, messageEmitter.room, 'add');
