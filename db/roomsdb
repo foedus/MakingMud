@@ -1,0 +1,3 @@
+{ "__v" : 0, "_id" : { "$oid" : "510419ce7478d44180000001" }, "description" : "You find yourself in a crowded marketplace at the center of a small town.", "exits" : { "east" : "51041a2e2aeeb24780000001", "west" : "51041a51e6d8b44a80000001" }, "title" : "Town Square Central" }
+{ "title" : "Town Square East", "description" : "You find yourself on the eastern edge of the crowded marketplace.", "exits" : { "west" : "510419ce7478d44180000001" }, "_id" : { "$oid" : "51041a2e2aeeb24780000001" }, "__v" : 0 }
+{ "title" : "Town Square West", "description" : "You find yourself on the western edge of the crowded marketplace.", "exits" : { "east" : "510419ce7478d44180000001" }, "_id" : { "$oid" : "51041a51e6d8b44a80000001" }, "__v" : 0 }

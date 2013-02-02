@@ -1,0 +1,2 @@
+{ "v" : 1, "key" : { "_id" : 1 }, "ns" : "MakingMud.rooms", "name" : "_id_" }
+{ "v" : 1, "key" : { "_id" : 1 }, "ns" : "MakingMud.users", "name" : "_id_" }
