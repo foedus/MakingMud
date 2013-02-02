@@ -52,7 +52,7 @@ socket.on('open', function () {
 function processCommand (command) {
 	var newElement = document.createElement('div');
 	if (command.type === 'room') {
-		newElement.innerText = command.title + "\n" + command.description + "\n" + 'exits: ' + command.exits + "\n" + 'who: ' + command.who;
+		newElement.innerText = '[' + command.title + ']' + "\n" + command.description + "\n" + 'exits: ' + command.exits + "\n" + 'who: ' + command.who;
 	}
 	if (command.type === 'say') {
 		if (command.name == name) {
@@ -62,6 +62,9 @@ function processCommand (command) {
 		}
 	}
 	if (command.type === 'error') {
+		newElement.innerText = command.content;
+	}
+	if (command.type === 'interval') {
 		newElement.innerText = command.content;
 	}
 	if (command.type === 'arrival') {
