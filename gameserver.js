@@ -66,6 +66,7 @@ gameserver.on('connection', function (socket) {
 					We could do this in a user.setRoom method.
 					*/
 					messageEmitter.emit('OUT', message);
+					user.startUserLoop();
 					messageEmitter.user = user;
 					messageEmitter.room = room._id;
 					gameMaster.userRoomAction(user, messageEmitter.room, 'add');
@@ -92,15 +93,7 @@ gameserver.on('connection', function (socket) {
 			room.users.forEach(function(user) {
 				user.socket.send(JSON.stringify(message));
 			});
-			console.log('********GM************')
-			console.log(gameMaster);
 		});
-		
-		/* foreach()
-		1. Get users room
-		2. Find all users in room w/foreach on room.users
-		3. socket.send to each user's socket
-		*/
 	});
 	
 	messageEmitter.on('command', function(data) {

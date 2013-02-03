@@ -55,7 +55,7 @@ roomSchema.methods.getExits = function() {
 	}
 	exitString = exits.join(', ');
 	if (exitString.length == 0) {
-		exitString += 'none.'
+		exitString += 'none.';
 	} else {
 		exitString += '.';
 	}

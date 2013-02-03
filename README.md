@@ -9,6 +9,9 @@ Enable talking with "'"
 Set focus on input text field in client.
 Enable movement in all directions.
 Gracefully handle invalid commands.
+Flesh out full room display with who, exits...
+Enabling talking to room
+Converted to Mongoose
 
 To Do:
 Create admin system for db management.
@@ -20,34 +23,16 @@ Combat system.
 Proper login page/prompt.
 Character creation system.
 Experience verbs - look, who, search...
-Flesh out full room display with who, exits...
+Complete logout system (logout on command prompt; logout due to inactivity, logout due to "fatal error", etc.)
 
-Enabling talking to room
 
 Things to ask:
 
-A using self = this.
-** consider prototyping for all functions for objects, unless you don't want variable to leak
+1. Why isn't socket obj showing on user when you print user even though you can see it when logging user.socket?
 
-A How can the client know who the user is (right now only the game server knows [for chat])
+2. What is a map and how do you scale the commands properly
 
-Game state!!!
-The whole question of sockets/players/things on the socket
-Best way to persist data across the app? On socket?
-
-socket chatting, best way to serialize
-
-What is a map and how do you scale the commands properly
-
-node design patterns -- all these callbacks/parallel/series/waterfalls/async etc.
-
-why do we have to use socket.send twice --> scope issue?
-
-running a gameloop
-
-** MONGOOSE **
-ORM -- define what a room is, define the parameters.
-In the game server, you tell mongoose you need to connect and all the other files can just use that connection. It will help denest some of those callbacks in User and Room.
+3. Running a gameloop?
 
 Gameloop:
 
@@ -71,11 +56,12 @@ Gameloop:
 	Dead bodies decay
 
 Event based stuff:
-Attacks change health
-Spells change mana
-Kills change experience
-NPCs are interacted with
-Environment is interacted
-Players kill monsters
-Players search monsters
+
+	Attacks change health
+	Spells change mana
+	Kills change experience
+	NPCs are interacted with
+	Environment is interacted
+	Players kill monsters
+	Players search monsters
 
