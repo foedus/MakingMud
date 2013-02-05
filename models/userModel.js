@@ -27,7 +27,7 @@ userSchema.methods.startUserLoop = function() {
 	setInterval(function() {
 		self.incrementHealth();
 		self.incrementMana();
-		self.incrementSpells();
+		// self.incrementSpells();
 	}, 5000);
 }
 

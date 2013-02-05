@@ -3,7 +3,19 @@ var mongoose = require('mongoose');
 var roomSchema = mongoose.Schema({
 	title: String,
 	description: String,
-	exits: {},
+	exits: {
+		north: String,
+		south: String,
+		east: String,
+		west: String,
+		northeast: String,
+		northwest: String,
+		southeast: String,
+		southwest: String,
+		up: String,
+		down: String,
+		other: Array
+	},
 	users: Array
 });
 

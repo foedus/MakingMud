@@ -1,0 +1,17 @@
+doctype 5
+html(lang="en")
+head
+	include ../../public/css/normalize.css
+	include ../../public/css/style.css
+	include ../../public/css/room.css
+	title Rooms
+
+block main
+	h1 Rooms
+
+block content
+	each room in rooms
+		.room
+			a.title(href='/rooms/'+room._id, title=room.title) #{room.title}
+			p=room.description
+	a.title(href='/rooms/new') New
