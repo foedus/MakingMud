@@ -38,6 +38,14 @@ roomSchema.methods.addUserToRoom = function(user) {
 roomSchema.methods.removeUserFromRoom = function(user) {
 	var self = this;
 	self.users.splice(self.users.indexOf(user),1);
+	var message = {
+		type: 'departure',
+		name: user.name,
+		content: user.name + ' leaves the room.'
+	};
+	self.users.forEach(function(user) {
+		user.socket.send(JSON.stringify(message));
+	});
 };
 
 roomSchema.methods.checkExits = function(direction) {

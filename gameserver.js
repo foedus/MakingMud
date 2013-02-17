@@ -54,7 +54,6 @@ gameserver.on('connection', function (socket) {
 						return console.log('User did not have a room.');
 					}	
 					/* Now we send the first room message: */
-					
 					var message = {
 						type: 'room',
 						title: room.title,

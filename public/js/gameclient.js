@@ -71,6 +71,10 @@ function processCommand (command) {
 		if(command.name == name) return;
 		newElement.innerText = command.content;
 	}
+	if (command.type === 'departure') {
+		if(command.name == name) return;
+		newElement.innerText = command.content;
+	}
 	newElement.innerText = newElement.innerText + '\n' + '>';
 	contentDiv.appendChild(newElement);
 };
