@@ -59,11 +59,13 @@ roomSchema.methods.getRoomName = function(cb) {
 }
 
 roomSchema.methods.getExits = function() {
-	var self = this;
+	var self = this.toObject();
 	var exits = [];
 	var exitString = '';
-	for (var name in self.exits) {
-		exits.push(name);
+	for (var i in self.exits) {
+		if (i !== 'other') {
+			exits.push(i);
+		}
 	}
 	exitString = exits.join(', ');
 	if (exitString.length == 0) {
