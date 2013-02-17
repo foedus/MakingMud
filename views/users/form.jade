@@ -1,0 +1,37 @@
+doctype 5
+html(lang="en")
+head
+	include ../../public/css/normalize.css
+	include ../../public/css/style.css
+	include ../../public/css/room.css
+	title= title
+body
+	block content
+	- var action = '/users'
+	- if (!user.isNew)
+			- action += '/'+user.id
+	
+		form(action=action, method="post", enctype="multipart/form-data")
+			if (!user.isNew) 
+				input(type="hidden", name="_method", value="put")
+				
+			fieldset
+				legend CREATE A NEW USER:
+				label(for="user[name]") NAME: 
+					input(type="text", name="user[name]", value=user.name, placeholder="Name the character.")
+				p
+				label(for="user[roomId]") CURRENT ROOM:
+					input(name="user[roomId]", value=user.roomId, placeholder="RoomID")
+			fieldset.exits
+				legend STATS:	
+				label(for="user.stats.strength") Strength:
+					input(type="text", name="user[stats][strength]", value=user.stats.strength, placeholder="Number 0-100")
+				label(for="user.stats.agility") Agility:
+					input(type="text", name="user[stats][agility]", value=user.stats.agility, placeholder="Number 0-100")
+				label(for="user.stats.wisdom") Wisdom:
+					input(type="text", name="user[stats][wisdom]", value=user.stats.wisdom, placeholder="Number 0-100")
+				label(for="user.stats.intelligence") Intelligence:
+					input(type="text", name="user[stats][intelligence]", value=user.stats.intelligence, placeholder="Number 0-100")
+			p.buttons 
+				input(type="submit", value="SAVE USER")
+	

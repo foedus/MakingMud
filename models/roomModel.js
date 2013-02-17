@@ -71,7 +71,7 @@ roomSchema.methods.getExits = function() {
 	var exits = [];
 	var exitString = '';
 	for (var i in self.exits) {
-		if (i !== 'other') {
+		if (i !== 'other' && self.exits[i] !== '') {
 			exits.push(i);
 		}
 	}

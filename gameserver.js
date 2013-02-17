@@ -40,19 +40,23 @@ gameserver.on('connection', function (socket) {
 			}
 			user.online = true;
 			user.socket = socket; // Need to find best way to do this but it works
-			gameMaster.users.push(user);			
-			user.save(function(err) {
+			gameMaster.users.push(user);
+			if (!user.roomId) {
+				user.roomId = '512150235e8fbbd616000002' // put new users in TSC by default
+			}		
+			gameMaster.getRoom(user.roomId, function(err, room) {
 				if (err) {
 					return console.error(err);
 				}
-				// User is active, therefore get their room
-				gameMaster.getRoom(user.roomId, function(err, room) {
+				if (!room) {
+					return console.log('User did not have a room.');
+				}
+				user.roomId = room._id;
+				user.save(function(err) {
 					if (err) {
 						return console.error(err);
 					}
-					if (!room) {
-						return console.log('User did not have a room.');
-					}	
+					// User is active, room is updated.
 					/* Now we send the first room message: */
 					var message = {
 						type: 'room',
@@ -69,7 +73,7 @@ gameserver.on('connection', function (socket) {
 					messageEmitter.user = user;
 					messageEmitter.room = room._id;
 					gameMaster.userRoomAction(user, messageEmitter.room, 'add');
-				});
+			});
 			});	
 		});	
 	});
@@ -156,8 +160,7 @@ gameserver.on('connection', function (socket) {
 			user.roomId = newRoomId;
 			user.save(function(err) {
 				if (err) {
-					console.error(err);
-					return;
+					return console.error(err);
 				}
 				var message = {
 					type: 'room',

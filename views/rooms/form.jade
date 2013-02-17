@@ -4,56 +4,55 @@ head
 	include ../../public/css/normalize.css
 	include ../../public/css/style.css
 	include ../../public/css/room.css
-	title Create a room
+	title= title
 body
 	block content
 	- var action = '/rooms'
-	- var value = true
-	if (!room.isNew)
-			- value = room.isNew
+	- if (!room.isNew)
 			- action += '/'+room.id
-	p=value
 	
-		form(action=action, method="POST", enctype="multipart/form-data")
+		form(action=action, method="post", enctype="multipart/form-data")
 			if (!room.isNew) 
-				input(type="hidden", name="_method", value="PUT")
+				input(type="hidden", name="_method", value="put")
 				
 			fieldset
 				legend CREATE A NEW ROOM:
 				label(for="room[title]") TITLE: 
 					input(type="text", name="room[title]", value=room.title, placeholder="Name the room.")
 				p
-				label(for="room[title]") DESCRIPTION:
-					textarea(name="descText", placeholder="Enter the room description.")=room.description
+				label(for="room[description]") DESCRIPTION:
+					textarea(name="room[description]", placeholder="Enter the room description.")=room.description
 			fieldset.exits
 				legend EXITS:	
 				label(for="room.exits[n]") North:
-					input(type="text", name="room.exits[n]", value=room.exits.north, placeholder="RoomID")
+					input(type="text", name="room[exits][north]", value=room.exits.north, placeholder="RoomID")
 				label(for="room.exits[s]") South:
-					input(type="text", name="room.exits[s]", value=room.exits.south, placeholder="RoomID")
+					input(type="text", name="room[exits][south]", value=room.exits.south, placeholder="RoomID")
 				label(for="room.exits[e]") East:
-					input(type="text", name="room.exits[e]", value=room.exits.east, placeholder="RoomID")
+					input(type="text", name="room[exits][east]", value=room.exits.east, placeholder="RoomID")
 				label(for="room.exits[w]") West:
-					input(type="text", name="room.exits[w]", value=room.exits.west, placeholder="RoomID")
+					input(type="text", name="room[exits][west]", value=room.exits.west, placeholder="RoomID")
 				label(for="room.exits[ne]") NorthEast:
-					input(type="text", name="room.exits[ne]", value=room.exits.ne, placeholder="RoomID")
+					input(type="text", name="room[exits][northeast]", value=room.exits.ne, placeholder="RoomID")
 				label(for="room.exits[nw]") NorthWest:
-					input(type="text", name="room.exits[nw]", value=room.exits.nw, placeholder="RoomID")
+					input(type="text", name="room[exits][northwest]", value=room.exits.nw, placeholder="RoomID")
 				label(for="room.exits[se]") SouthEast:
-					input(type="text", name="room.exits[se]", value=room.exits.se, placeholder="RoomID")
+					input(type="text", name="room[exits][southeast]", value=room.exits.se, placeholder="RoomID")
 				label(for="room.exits[sw]") SouthWest:
-					input(type="text", name="room.exits[sw]", value=room.exits.sw, placeholder="RoomID")
+					input(type="text", name="room[exits][southwest]", value=room.exits.sw, placeholder="RoomID")
 				label(for="room.exits[up]") Up:
-					input(type="text", name="room.exits[up]", value=room.exits.up, placeholder="RoomID")
+					input(type="text", name="room[exits][up]", value=room.exits.up, placeholder="RoomID")
 				label(for="room.exits[down]") Down:
-					input(type="text", name="room.exits[down]", value=room.exits.down, placeholder="RoomID")
+					input(type="text", name="room[exits][down]", value=room.exits.down, placeholder="RoomID")
 			p.buttons 
 				input(type="submit", value="SAVE ROOM")
 	block map
 		#mapbox 
 			h4 Rooms:
 				ul
-					li
-					li
-					li
+					- each room in map
+						li.title= room.title 
+						li.id= room.id
+						li 
+							
 	

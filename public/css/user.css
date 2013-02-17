@@ -48,17 +48,6 @@ label textarea {
 	width: 100%;
 }
 
-#mapbox {
-	position: fixed;
-	left: 620px;
-	top: 10px;
-	margin: 10px;
-	width: 300px;
-	background-color: #DDD;
-	border: 1px solid;
-	border-color: #AAA;
-}
-
 h4 {
 	padding: 0px;
 	margin: 0px;
@@ -81,9 +70,8 @@ h4 {
 
 #nav button {
 	background-color: white;
-	font-weight: bold;
 	text-decoration: underline;
+	font-weight: bold;
 	border: none;
 	color: red;
 }
-

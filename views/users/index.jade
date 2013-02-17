@@ -3,21 +3,21 @@ html(lang="en")
 head
 	include ../../public/css/normalize.css
 	include ../../public/css/style.css
-	include ../../public/css/room.css
+	include ../../public/css/user.css
 	title= title
 
 block main
-	h1 Rooms
+	h1 Users
 
 block content
 	#list
-		each room in rooms
-			.room
-				a.title(href='/rooms/'+room._id, title=room.title) #{room.title}
-				p=room.description
+		each user in users
+			.user
+				a.title(href='/users/'+user._id, title=user.name) #{user.name}
+				p= user.stats
 	#nav
 		ul
 			li
-				a.title(href='/rooms/new') New
+				a.title(href='/users/new') New
 			li
 				a.title(href='/tools') Back to tools

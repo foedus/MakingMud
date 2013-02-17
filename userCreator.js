@@ -12,10 +12,10 @@ var UserModel = require('./models/userModel'); // Bring in Room and User models 
 var user = new UserModel({
 	name: 'Neville',
 	online: false,
-	roomId: '510419ce7478d44180000001'
+	roomId: '512136a132bb622f15000002'
 });
 
-// Town Square Central :'510419ce7478d44180000001'}, 'east': '51041a2e2aeeb24780000001', 'west': '51041a51e6d8b44a80000001'
+// Town Square Central :'512136a132bb622f15000002'}, 'east': '51041a2e2aeeb24780000001', 'west': '51041a51e6d8b44a80000001'
 
 user.save(function(err) {
 	if (err) {

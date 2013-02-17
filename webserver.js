@@ -25,23 +25,38 @@ app.configure(function() {
 	  next();
 	});
 	// app.use(express.logger());
+	app.use(express.bodyParser());
 	app.use(express.methodOverride());
 	app.use(app.router);
 });
 
 app.get('/', function(req,res) {
 	res.sendfile(__dirname + '/views/index.html');
-})
+});
 
-//Room editor
+app.get('/tools', function(req,res) {
+	res.render(__dirname + '/views/tools.jade');
+});
+
+// Rooms editor
 var rooms = require('./controllers/roomCreator');
-app.get('/rooms/', rooms.index);
+app.get('/rooms', rooms.index);
 app.get('/rooms/new', rooms.new);
 app.post('/rooms', rooms.create);
 app.get('/rooms/:id', rooms.show);
 app.get('/rooms/:id/edit', rooms.edit);
 app.put('/rooms/:id', rooms.update);
 app.del('/rooms/:id', rooms.destroy);
+
+// User editor
+var users = require('./controllers/userCreator');
+app.get('/users', users.index);
+app.get('/users/new', users.new);
+app.post('/users', users.create);
+app.get('/users/:id', users.show);
+app.get('/users/:id/edit', users.edit);
+app.put('/users/:id', users.update);
+app.del('/users/:id', users.destroy);
 
 app.listen(8080, function () {
 	console.log('Webserver running on port 8080...');

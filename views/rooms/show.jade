@@ -4,19 +4,28 @@ head
   include ../../public/css/normalize.css
   include ../../public/css/style.css
   include ../../public/css/room.css
-  title Rooms
+  title= title
 
 block main
   h1= room.title
+  
 
 block content
   .row
     .span9
-      p=room.description
+      #list
+        p= room.id
+        p= room.description
 
   p
     br
+  #nav
     form.center.form-inline.confirm(action="/rooms/"+room.id, method="post")
-      a.btn(href='/rooms/'+room._id+'/edit', title="edit") Edit
-      input(type="hidden", name="_method", value="DELETE")
-      button.btn.btn-danger(type="submit") delete
+    ul
+      li
+        a.btn(href='/rooms/', title="back") Back 
+      li      
+        a.btn(href='/rooms/'+room._id+'/edit', title="edit") Edit 
+      li
+        input(type="hidden", name="_method", value="delete")
+        button.btn.btn-danger(type="submit") Delete

@@ -25,6 +25,7 @@ var userSchema = mongoose.Schema({
 userSchema.methods.startUserLoop = function() {
 	var self = this;
 	setInterval(function() {
+		console.log(self.name + ' heartbeat ping.');
 		self.incrementHealth();
 		self.incrementMana();
 		// self.incrementSpells();
