@@ -32,6 +32,33 @@ label input {
 	width: 80%;
 }
 
+.other ul {
+	list-style-type: none;
+	padding: 0px;
+	margin: 0px;
+}
+
+.other ul li {
+	float: left;
+	display: block;
+}
+
+.other ul li button {
+	border: none;
+	text-decoration: underline;
+	color: blue;
+	background-color: #DDD;
+}
+.other ul li label {
+	float: left;
+	width: 48%;
+}
+
+.other ul li input {
+	margin-left: 5px;
+	width: 70%;
+}
+
 label textarea {
 	overflow-y: scroll;
 	overflow-x: none;
@@ -57,6 +84,10 @@ label textarea {
 	background-color: #DDD;
 	border: 1px solid;
 	border-color: #AAA;
+}
+
+#mapbox ul {
+	list-style-type: none;
 }
 
 h4 {

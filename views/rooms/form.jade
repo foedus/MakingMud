@@ -1,9 +1,10 @@
 doctype 5
 html(lang="en")
 head
+	script(type="text/javascript", src="http://code.jquery.com/jquery-1.9.1.min.js")
 	include ../../public/css/normalize.css
-	include ../../public/css/style.css
 	include ../../public/css/room.css
+	
 	title= title
 body
 	block content
@@ -23,7 +24,7 @@ body
 				label(for="room[description]") DESCRIPTION:
 					textarea(name="room[description]", placeholder="Enter the room description.")=room.description
 			fieldset.exits
-				legend EXITS:	
+				legend DIR EXITS:	
 				label(for="room.exits[n]") North:
 					input(type="text", name="room[exits][north]", value=room.exits.north, placeholder="RoomID")
 				label(for="room.exits[s]") South:
@@ -44,6 +45,18 @@ body
 					input(type="text", name="room[exits][up]", value=room.exits.up, placeholder="RoomID")
 				label(for="room.exits[down]") Down:
 					input(type="text", name="room[exits][down]", value=room.exits.down, placeholder="RoomID")
+			fieldset.other
+				legend OTHER EXITS:
+				ul
+					#otherExitHolder
+						li
+							label(for="room.exits.other") Name:
+								input(type="text", name="room.exits.other", value=room.exits.other[0], placeholder="Exit Name")  
+							label(for="room.exits.other") Room:
+								input(type="text", name="room.exits.other", value=room.exits.other[0], placeholder="RoomId")
+					li 
+						button(type="button") + add more
+						
 			p.buttons 
 				input(type="submit", value="SAVE ROOM")
 	block map
@@ -54,5 +67,12 @@ body
 						li.title= room.title 
 						li.id= room.id
 						li 
-							
+							p
+	footer
+		script
+			$(":button").click(function () {
+				event.preventDefault();
+				$('#otherExitHolder')
+					.append('<li><label for="room.exits.other">Name:<input type="text", name="room.exits.other", placeholder="Exit Name"></label><label for="room.exits.other">Room:<input type="text", name="room.exits.other", placeholder="RoomId"></label>');
+			});
 	
