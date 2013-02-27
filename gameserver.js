@@ -197,6 +197,7 @@ gameserver.on('connection', function (socket) {
 	// Upon close of client window, run appropriate logout tasks
 	socket.on('close', function () {
 		var user = messageEmitter.user;
+		clearInterval(user.intId);
 		// Takes user out of gameMaster
 		gameMaster.users.splice(gameMaster.users.indexOf(user), 1);
 		// Takes user out of room in gameMaster
@@ -208,7 +209,6 @@ gameserver.on('connection', function (socket) {
 				return console.error(err);
 			}		
 		});
-		clearInterval(user.intId);
 		console.log(gameMaster);		
 	});
 	
