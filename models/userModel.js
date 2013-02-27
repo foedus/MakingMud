@@ -25,7 +25,7 @@ var userSchema = mongoose.Schema({
 
 userSchema.methods.startUserLoop = function() {
 	var self = this;
-	setInterval(function() {
+	self.intId = setInterval(function() {
 		console.log(self.name + ' heartbeat ping.');
 		self.healthRoom();
 		// self.manaRoom();

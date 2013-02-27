@@ -208,6 +208,7 @@ gameserver.on('connection', function (socket) {
 				return console.error(err);
 			}		
 		});
+		clearInterval(user.intId);
 		console.log(gameMaster);		
 	});
 	
