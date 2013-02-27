@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var Room = require('../models/roomModel'); // since using room functions
 
 var userSchema = mongoose.Schema({
 	name: String,
@@ -26,32 +27,48 @@ userSchema.methods.startUserLoop = function() {
 	var self = this;
 	setInterval(function() {
 		console.log(self.name + ' heartbeat ping.');
-		self.incrementHealth();
-		self.incrementMana();
+		self.healthRoom();
+		// self.manaRoom();
 		// self.incrementSpells();
 	}, 5000);
 }
 
-userSchema.methods.incrementHealth = function() {
+userSchema.methods.healthRoom = function() {
+	var self = this;
+	Room.findOne({_id:self.roomId}, function(err, room) {
+		if (err) {
+			console.error(err);
+			return cb(err);
+		}
+		self.healthUpdate(room.healthIndex/100);
+	});
+}
+
+userSchema.methods.healthUpdate = function(change) {
 	var self = this;
 	if (self.healthCurrent < self.healthMax) {
-		self.healthCurrent += 1;
-		self.save();
+		self.healthCurrent = Math.min(self.healthCurrent + change, self.healthMax);
 	}
+	self.save();
 }
 
-userSchema.methods.incrementMana = function() {
-	var self = this;
-	if (self.manaCurrent < self.manaMax) {
-		self.manaCurrent += 1;
-		self.save();
-	}
-}
-
-userSchema.methods.incrementSpells = function() {
-	var self = this;
-	if (self.activeSpells.length == 0) return;
-	// Decrement from start time of both combat and periodic spells
-}
+// userSchema.methods.manaRoom = function() {
+// 	var self = this;
+// 	Room.findOne({_id:self.roomId}, function(err, room) {
+// 		if (err) {
+// 			console.error(err);
+// 			return cb(err);
+// 		}
+// 		self.manaUpdate(room.manaIndex/100);
+// 	});
+// }
+// 
+// userSchema.methods.manaUpdate = function(change) {
+// 	var self = this;
+// 	if (self.manaCurrent < self.manaMax) {
+// 		self.manaCurrent = Math.min(self.manaCurrent + change, self.manaMax);
+// 	}
+// 	self.save();
+// }
 
 module.exports = mongoose.model('User', userSchema);

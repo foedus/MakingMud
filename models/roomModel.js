@@ -16,6 +16,8 @@ var roomSchema = mongoose.Schema({
 		down: String,
 		other: Array
 	},
+	manaIndex: Number,
+	healthIndex: Number,
 	users: Array
 });
 
