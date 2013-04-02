@@ -73,7 +73,7 @@ gameserver.on('connection', function (socket) {
 					messageEmitter.user = user;
 					messageEmitter.room = room._id;
 					gameMaster.userRoomAction(user, messageEmitter.room, 'add');
-			});
+				});
 			});	
 		});	
 	});

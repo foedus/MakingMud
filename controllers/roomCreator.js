@@ -81,7 +81,7 @@ exports.new = function(req, res){
 // Create a room
 exports.create = function (req, res) {
 	console.log('Create called.');
-	console.log(req.body.room);
+	console.log(req.body);
 	var room = new Room(req.body.room);
 	
   	room.save(function(err, doc) {

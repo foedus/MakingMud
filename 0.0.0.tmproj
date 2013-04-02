@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>views/rooms/form.jade</string>
+	<string>models/userModel.js</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -21,19 +21,33 @@
 	<integer>200</integer>
 	<key>metaData</key>
 	<dict>
+		<key>controllers/roomCreator.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>22</integer>
+				<key>line</key>
+				<integer>83</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>165</integer>
+		</dict>
 		<key>gameserver.js</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>6</integer>
+				<integer>4</integer>
 				<key>line</key>
-				<integer>45</integer>
+				<integer>75</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>29</integer>
+			<integer>47</integer>
 		</dict>
 		<key>lib/gamemaster.js</key>
 		<dict>
@@ -43,20 +57,6 @@
 				<integer>10</integer>
 				<key>line</key>
 				<integer>21</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>4</integer>
-		</dict>
-		<key>lib/room.js</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>0</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -75,7 +75,21 @@
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>3</integer>
+			<integer>0</integer>
+		</dict>
+		<key>models/userModel.js</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>46</integer>
+				<key>line</key>
+				<integer>34</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
 		</dict>
 		<key>public/css/room.css</key>
 		<dict>
@@ -105,19 +119,47 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
+		<key>views/index.html</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>5</integer>
+				<key>line</key>
+				<integer>15</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
 		<key>views/rooms/form.jade</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>8</integer>
+				<integer>38</integer>
 				<key>line</key>
-				<integer>69</integer>
+				<integer>57</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>39</integer>
+			<integer>45</integer>
+		</dict>
+		<key>views/rooms/show.jade</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>10</integer>
+				<key>line</key>
+				<integer>29</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
 		</dict>
 		<key>webserver.js</key>
 		<dict>
@@ -137,17 +179,19 @@
 	<key>openDocuments</key>
 	<array>
 		<string>gameserver.js</string>
+		<string>models/userModel.js</string>
+		<string>views/index.html</string>
 		<string>webserver.js</string>
 		<string>lib/gamemaster.js</string>
 		<string>models/roomModel.js</string>
 		<string>views/rooms/form.jade</string>
-		<string>lib/room.js</string>
-		<string>public/css/style.css</string>
+		<string>controllers/roomCreator.js</string>
+		<string>views/rooms/show.jade</string>
 		<string>public/css/room.css</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{-1911, 141}, {1338, 1058}}</string>
+	<string>{{-1772, -49}, {1338, 1058}}</string>
 </dict>
 </plist>

@@ -50,10 +50,10 @@ body
 				ul
 					#otherExitHolder
 						li
-							label(for="room.exits.other") Name:
-								input(type="text", name="room.exits.other", value=room.exits.other[0], placeholder="Exit Name")  
-							label(for="room.exits.other") Room:
-								input(type="text", name="room.exits.other", value=room.exits.other[0], placeholder="RoomId")
+							label(for="room[exits][other]") Name:
+								input(type="text", name="room[exits][other]", placeholder="Exit Name", value="testName")  
+							label(for="room[exits][other]") Room:
+								input(type="text", name="room[exits][other]", placeholder="RoomId", value="testRoom")
 					li 
 						button(type="button") + add more
 						
@@ -73,6 +73,12 @@ body
 			$(":button").click(function () {
 				event.preventDefault();
 				$('#otherExitHolder')
-					.append('<li><label for="room.exits.other">Name:<input type="text", name="room.exits.other", placeholder="Exit Name"></label><label for="room.exits.other">Room:<input type="text", name="room.exits.other", placeholder="RoomId"></label>');
+					.append('<li><label for="room[exits][other]">Name:<input type="text", name="room[exits][other]", placeholder="Exit Name"></label><label for="room[exits][other]">Room:<input type="text", name="room[exits][other]", placeholder="RoomId"></label>');
 			});
+		script
+			var result = {};
+			$.each($('form>fieldset.other').serializeArray(), function() {
+				result[this.name] = this.value;
+			});
+			alert(JSON.stringify(result));	
 	
