@@ -3,8 +3,8 @@ var EventEmitter = require('events').EventEmitter;
 var mongoose = require('mongoose');
 
 var GameMaster = require('./lib/gamemaster').GameMaster;
+var Parser = require('./lib/parser').Parser;
 var User = require('./models/userModel');
-var Room = require('./models/roomModel'); // Bring in Room and User models for use by functions
 
 // Connect to DB
 mongoose.connect('mongodb://localhost/MakingMud');
@@ -104,77 +104,7 @@ gameserver.on('connection', function (socket) {
 			// User not logged in yet
 			return;
 		}
-		var user = messageEmitter.user;
-
-		var dirArray = ['north','south','east','west','northeast','southeast','northwest','southwest','up','down'];
-
-		// var mapArray = [
-		// 		{
-		// 			'triggers': dirArray,
-		// 			'action': function() {
-		// 				// Code for what to do on dirArray class triggers
-		// 			};
-		// 		},
-		// 		{
-		// 			'triggers': combatArray,
-		// 			'action': function() {
-		// 				// Code for what to do on combatArray class triggers
-		// 			};
-		// 		}
-		// 		];
-		
-		// newArray.forEach(function (action) {
-		// 	if (action.triggers.indexOf(data) == -1) {
-		// 		return;
-		// 	}
-		// 	action.action(data);
-		// })
-		
-		// This will be depricated once we have a catch all for commands that don't exist
-		if (dirArray.indexOf(data) == -1) {
-			return console.log('Direction not found.');
-		}
-
-		var direction = data;
-		var room = gameMaster.rooms[messageEmitter.room];
-		
-		if(!room.checkExits(direction)) {
-			// Send back error message
-			message = {
-				type: 'error',
-				content: 'Sorry, you cannot move in that direction.'
-			};
-			return messageEmitter.emit('OUT', message);
-		}
-		
-		var newRoomId = room.exits[direction];
-		gameMaster.getRoom(newRoomId, function(err, room) {
-			if (err) {
-				console.error(err);
-				return;
-			}
-			if (!room) {
-				return;
-			}
-			gameMaster.userRoomAction(user, messageEmitter.room, 'remove');
-			user.roomId = newRoomId;
-			user.save(function(err) {
-				if (err) {
-					return console.error(err);
-				}
-				var message = {
-					type: 'room',
-					title: room.title,
-					description: room.description,
-					exits: room.getExits(),
-					who: room.getUsers()
-				};
-				messageEmitter.room = room._id;
-				gameMaster.userRoomAction(user, messageEmitter.room, 'add');
-				messageEmitter.user = user;
-				messageEmitter.emit('OUT', message);
-			});
-		});
+		Parser.command(messageEmitter, data, gameMaster);
 	});
 
 	messageEmitter.on('OUT', function(data) {
@@ -197,6 +127,7 @@ gameserver.on('connection', function (socket) {
 	// Upon close of client window, run appropriate logout tasks
 	socket.on('close', function () {
 		var user = messageEmitter.user;
+		clearInterval(user.intId);
 		// Takes user out of gameMaster
 		gameMaster.users.splice(gameMaster.users.indexOf(user), 1);
 		// Takes user out of room in gameMaster
