@@ -3,7 +3,7 @@ html(lang="en")
 head
 	include ../../public/css/normalize.css
 	include ../../public/css/style.css
-	include ../../public/css/room.css
+	include ../../public/css/user.css
 	title= title
 body
 	block content
@@ -32,6 +32,15 @@ body
 					input(type="text", name="user[stats][wisdom]", value=user.stats.wisdom, placeholder="Number 0-100")
 				label(for="user.stats.intelligence") Intelligence:
 					input(type="text", name="user[stats][intelligence]", value=user.stats.intelligence, placeholder="Number 0-100")
+				label(for="user.stats.intelligence") Health Max:
+					input(type="text", name="user[healthMax]", value=user.healthMax, placeholder="Number 0-100")
+				label(for="user.stats.intelligence") Health Current:
+					input(type="text", name="user[healthCurrent]", value=user.healthCurrent, placeholder="Number 0-100")
+				label(for="user.stats.intelligence") Mana Max:
+					input(type="text", name="user[manaMax]", value=user.manaMax, placeholder="Number 0-100")
+				label(for="user.stats.intelligence") Mana Current:
+					input(type="text", name="user[manaCurrent]", value=user.manaCurrent, placeholder="Number 0-100")
+						
 			p.buttons 
 				input(type="submit", value="SAVE USER")
 	

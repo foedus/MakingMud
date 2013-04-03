@@ -21,7 +21,7 @@ label {
 
 label input {
 	display: inline-block;
-	width: 85%;
+	width: 70%;
 	height: 100%;
 	overflow: none;
 }
@@ -29,7 +29,7 @@ label input {
 .exits label input {
 	display: inline-block;
 	float: right;
-	width: 80%;
+	width: 70%;
 }
 
 label textarea {

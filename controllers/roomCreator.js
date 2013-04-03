@@ -132,6 +132,8 @@ exports.update = function(req, res) {
 			room.title = req.body.room.title;
 			room.description = req.body.room.description;
 			room.exits = req.body.room.exits;
+			room.healthIndex =  req.body.room.healthIndex;
+			room.manaIndex = req.body.room.manaIndex;
 			room.save(function(err, doc) {
 				if (err) {
 					res.render('rooms/edit', {

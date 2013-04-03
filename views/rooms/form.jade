@@ -45,17 +45,26 @@ body
 					input(type="text", name="room[exits][up]", value=room.exits.up, placeholder="RoomID")
 				label(for="room.exits[down]") Down:
 					input(type="text", name="room[exits][down]", value=room.exits.down, placeholder="RoomID")
-			fieldset.other
+			fieldset.otherexits
 				legend OTHER EXITS:
 				ul
 					#otherExitHolder
 						li
 							label(for="room[exits][other]") Name:
-								input(type="text", name="room[exits][other]", placeholder="Exit Name", value="testName")  
+								input(type="text", name="room[exits][other]", placeholder="Exit Name")  
 							label(for="room[exits][other]") Room:
-								input(type="text", name="room[exits][other]", placeholder="RoomId", value="testRoom")
+								input(type="text", name="room[exits][other]", placeholder="RoomId")
 					li 
 						button(type="button") + add more
+			fieldset.other
+				legend STATS:
+				ul
+					#statsHolder
+						li
+							label(for="room[healthIndex]") Health Index:
+								input(type="text", name="room[healthIndex]", placeholder="1-100", value=room.healthIndex)
+							label(for="room[manaIndex]") Mana Index:
+								input(type="text", name="room[manaIndex]", placeholder="1-100", value=room.manaIndex)  
 						
 			p.buttons 
 				input(type="submit", value="SAVE ROOM")
@@ -68,17 +77,5 @@ body
 						li.id= room.id
 						li 
 							p
-	footer
-		script
-			$(":button").click(function () {
-				event.preventDefault();
-				$('#otherExitHolder')
-					.append('<li><label for="room[exits][other]">Name:<input type="text", name="room[exits][other]", placeholder="Exit Name"></label><label for="room[exits][other]">Room:<input type="text", name="room[exits][other]", placeholder="RoomId"></label>');
-			});
-		script
-			var result = {};
-			$.each($('form>fieldset.other').serializeArray(), function() {
-				result[this.name] = this.value;
-			});
-			alert(JSON.stringify(result));	
+	footer	
 	

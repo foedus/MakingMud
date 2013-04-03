@@ -65,6 +65,10 @@ exports.update = function(req, res) {
 			user.name = req.body.user.name;
 			user.roomId = req.body.user.roomId;
 			user.stats = req.body.user.stats;
+			user.healthMax = req.body.user.healthMax;
+			user.healthCurrent = req.body.user.healthCurrent;
+			user.manaMax = req.body.user.manaMax;
+			user.manaCurrent = req.body.user.manaCurrent;
 			user.save(function(err, doc) {
 				if (err) {
 					res.render('users/edit', {
