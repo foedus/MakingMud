@@ -7,9 +7,13 @@ var name;
 commandInput.focus();
 
 commandInput.addEventListener('keypress', function(key) {
+	// Checks to see if return key has been pressed
 	if (key.keyCode !== 13) {
 		return;
 	}
+	// Forces scroll to bottom of div since user just entered text
+	contentDiv.scrollTop = contentDiv.scrollHeight;
+	// Sends data input to gameserver
 	if (/^'.*/.test(commandInput.value)) {
 		var command = {
 			'type': 'say',
@@ -77,4 +81,8 @@ function processCommand (command) {
 	}
 	newElement.innerText = newElement.innerText + '\n' + '>';
 	contentDiv.appendChild(newElement);
+	// Forces game client window to scroll to bottom of page when you are at the bottom of the page
+	if ((contentDiv.scrollHeight - contentDiv.scrollTop - contentDiv.clientHeight) < 100) {
+		contentDiv.scrollTop = contentDiv.scrollHeight;
+	}
 };
