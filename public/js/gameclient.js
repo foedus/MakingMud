@@ -5,22 +5,10 @@ var socket = new eio.Socket('ws://localhost:8083/');
 var newElement = document.createElement('div');
 contentDiv.appendChild(newElement);	
 
-var name;
+var name = "";
+var loggedIn = false;
 
 commandInput.focus();
-
-function loginHandler (key) {
-	if (key.keyCode !== 13) {
-		return;
-	}
-	contentDiv.scrollTop = contentDiv.scrollHeight;
-	var command = {
-		'type': 'login',
-		'data': commandInput.value
-	}
-	socket.send(JSON.stringify(command));
-	commandInput.value = '';
-}
 	
 function commandHandler (key) {
 	// Checks to see if return key has been pressed
@@ -30,15 +18,27 @@ function commandHandler (key) {
 	// Forces scroll to bottom of div since user just entered text
 	contentDiv.scrollTop = contentDiv.scrollHeight;
 	// Sends data input to gameserver
-	if (/^'.*/.test(commandInput.value)) {
+	if (!name || name === "") {
 		var command = {
-			'type': 'say',
-			'data': commandInput.value.slice(1)
+			'type': 'login',
+			'data': commandInput.value
+		}
+	} else if (name && !loggedIn) {
+		var command = {
+			'type': 'password',
+			'data': commandInput.value
 		}
 	} else {
-		var command = {
-			'type': 'command',
-			'data': commandInput.value
+		if (/^'.*/.test(commandInput.value)) {
+			var command = {
+				'type': 'say',
+				'data': commandInput.value.slice(1)
+			}
+		} else {
+			var command = {
+				'type': 'command',
+				'data': commandInput.value
+			}
 		}
 	}
 	socket.send(JSON.stringify(command));
@@ -47,7 +47,7 @@ function commandHandler (key) {
 
 // Opens socket as a client connects to the game server
 socket.on('open', function () {
-	commandInput.addEventListener('keypress', loginHandler);	
+	commandInput.addEventListener('keypress', commandHandler);	
 	socket.on('message', function (data) {
 		var command = JSON.parse(data);
 		// Can attach username to command - i.e. command.user = userName so that you can detect who is saying it and put 'you' instead
@@ -68,6 +68,14 @@ function processCommand (command) {
 	if (command.type === 'welcome') {
 		newElement.innerText = command.content;
 	}
+	if (command.type === 'login') {
+		if (command.success) {
+			name = command.name;
+			newElement.innerText = command.content;
+		} else {
+			newElement.innerText = command.content;
+		}
+	}
 	if (command.type === 'room') {
 		newElement.innerText = '[' + command.title + ']' + "\n" + command.description + "\n" + 'exits: ' + command.exits + "\n" + 'who: ' + command.who;
 	}
@@ -81,17 +89,8 @@ function processCommand (command) {
 	if (command.type === 'error') {
 		newElement.innerText = command.content;
 	}
-	if (command.type === 'login') {
-		if (command.success) {
-			commandInput.removeEventListener('keypress', loginHandler);
-			commandInput.addEventListener('keypress', commandHandler);
-			name = command.name;
-			newElement.innerText = command.content;
-		} else {
-			newElement.innerText = command.content;
-		}
-	}
 	if (command.type === 'logout') {
+		loggedIn = false;
 		contentDiv.innerHTML = '';
 		newElement.innerText = command.content;
 		newElement.innerText = newElement.innerText + "\n" + "Refresh your browser to login again."

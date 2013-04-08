@@ -29,8 +29,6 @@ gameserver.on('connection', function (socket) {
 	welcomeText = welcomeText + "//     Making Mud     " + "\n";
 	welcomeText = welcomeText + "//  (c) SAS/AFS 2013 " + "\n";
 	welcomeText = welcomeText + "//" + "\n" + "\n";
-	welcomeText = welcomeText + "Welcome! Please enter your character's name below.";
-	
 	var message = {
 		type: 'welcome',
 		content: welcomeText
@@ -69,7 +67,7 @@ gameserver.on('connection', function (socket) {
 				"type": "login",
 				"success": true,
 				"name": user.name,
-				"content": "Welcome back, " + user.name + "!"
+				"content": "Please enter your password:"
 			}
 			messageEmitter.emit('OUT', message);
 			
