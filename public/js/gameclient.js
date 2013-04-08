@@ -3,12 +3,6 @@ var contentDiv = document.querySelector('#content');
 var socket = new eio.Socket('ws://localhost:8083/');
 
 var newElement = document.createElement('div');
-newElement.innerText = newElement.innerText + "//" + "\n";
-newElement.innerText = newElement.innerText + "//     Making Mud     " + "\n";
-newElement.innerText = newElement.innerText + "//  (c) SAS/AFS 2013 " + "\n";
-newElement.innerText = newElement.innerText + "//" + "\n" + "\n";
-newElement.innerText = newElement.innerText + "Welcome! Please enter your character's name below." + "\n";
-newElement.innerText = newElement.innerText + ">" + "\n";
 contentDiv.appendChild(newElement);	
 
 var name;
@@ -71,6 +65,9 @@ socket.on('open', function () {
 
 function processCommand (command) {
 	var newElement = document.createElement('div');
+	if (command.type === 'welcome') {
+		newElement.innerText = command.content;
+	}
 	if (command.type === 'room') {
 		newElement.innerText = '[' + command.title + ']' + "\n" + command.description + "\n" + 'exits: ' + command.exits + "\n" + 'who: ' + command.who;
 	}
@@ -93,6 +90,11 @@ function processCommand (command) {
 		} else {
 			newElement.innerText = command.content;
 		}
+	}
+	if (command.type === 'logout') {
+		contentDiv.innerHTML = '';
+		newElement.innerText = command.content;
+		newElement.innerText = newElement.innerText + "\n" + "Refresh your browser to login again."
 	}
 	if (command.type === 'interval') {
 		newElement.innerText = command.content;

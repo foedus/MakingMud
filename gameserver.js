@@ -25,6 +25,18 @@ var gameserver = engine.listen(8083, function() {
 gameserver.on('connection', function (socket) {
 	var messageEmitter = new EventEmitter();
 	
+	var welcomeText = "//" + "\n";
+	welcomeText = welcomeText + "//     Making Mud     " + "\n";
+	welcomeText = welcomeText + "//  (c) SAS/AFS 2013 " + "\n";
+	welcomeText = welcomeText + "//" + "\n" + "\n";
+	welcomeText = welcomeText + "Welcome! Please enter your character's name below.";
+	
+	var message = {
+		type: 'welcome',
+		content: welcomeText
+	}
+	socket.send(JSON.stringify(message));
+	
 	socket.on('message', function (data) {
 		console.log('---------------');
 		console.log('FROM THE SOCKET');
@@ -131,18 +143,6 @@ gameserver.on('connection', function (socket) {
 		// console.log(data);
 		socket.send(JSON.stringify(data));
 	});
-	
-	// For when user logs themselves out
-	// messageEmitter.on('logout', function(data) {
-	// 	var user = messageEmitter.user;
-	// 	user.online = false;
-	// 	user.save(function (err) {
-	// 		if (err) {
-	// 			return console.error(err);
-	// 		}
-	// 		socket.close();
-	// 	});		
-	// });
 	
 	// Upon close of client window, run appropriate logout tasks
 	socket.on('close', function () {
