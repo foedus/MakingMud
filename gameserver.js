@@ -38,9 +38,29 @@ gameserver.on('connection', function (socket) {
 			if (err) {
 				return console.error(err);
 			}
+			if (!user) {
+				console.log('User does not exist.');
+				var message = {
+					"type": "login",
+					"content": "Please try again!"
+				}
+				return messageEmitter.emit('OUT', message);
+			}
+			
 			user.online = true;
 			user.socket = socket; // Need to find best way to do this but it works
 			gameMaster.users.push(user);
+			
+			// Tell the client that login succeeded
+			console.log('User found, login success.');
+			var message = {
+				"type": "login",
+				"success": true,
+				"name": user.name,
+				"content": "Welcome back, " + user.name + "!"
+			}
+			messageEmitter.emit('OUT', message);
+			
 			if (!user.roomId) {
 				user.roomId = '512150235e8fbbd616000002' // put new users in TSC by default
 			}		
@@ -112,7 +132,7 @@ gameserver.on('connection', function (socket) {
 		socket.send(JSON.stringify(data));
 	});
 	
-	// // For when user logs themselves out
+	// For when user logs themselves out
 	// messageEmitter.on('logout', function(data) {
 	// 	var user = messageEmitter.user;
 	// 	user.online = false;

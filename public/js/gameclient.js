@@ -2,11 +2,33 @@ var commandInput = document.querySelector('#input > input');
 var contentDiv = document.querySelector('#content');
 var socket = new eio.Socket('ws://localhost:8083/');
 
+var newElement = document.createElement('div');
+newElement.innerText = newElement.innerText + "//" + "\n";
+newElement.innerText = newElement.innerText + "//     Making Mud     " + "\n";
+newElement.innerText = newElement.innerText + "//  (c) SAS/AFS 2013 " + "\n";
+newElement.innerText = newElement.innerText + "//" + "\n" + "\n";
+newElement.innerText = newElement.innerText + "Welcome! Please enter your character's name below." + "\n";
+newElement.innerText = newElement.innerText + ">" + "\n";
+contentDiv.appendChild(newElement);	
+
 var name;
 
 commandInput.focus();
 
-commandInput.addEventListener('keypress', function(key) {
+function loginHandler (key) {
+	if (key.keyCode !== 13) {
+		return;
+	}
+	contentDiv.scrollTop = contentDiv.scrollHeight;
+	var command = {
+		'type': 'login',
+		'data': commandInput.value
+	}
+	socket.send(JSON.stringify(command));
+	commandInput.value = '';
+}
+	
+function commandHandler (key) {
 	// Checks to see if return key has been pressed
 	if (key.keyCode !== 13) {
 		return;
@@ -27,17 +49,11 @@ commandInput.addEventListener('keypress', function(key) {
 	}
 	socket.send(JSON.stringify(command));
 	commandInput.value = '';
-});
+}
 
 // Opens socket as a client connects to the game server
 socket.on('open', function () {
-	name = prompt('What is your name?');
-	var command = {
-		'type':'login',
-		'data':name
-	}
-	socket.send(JSON.stringify(command));
-		
+	commandInput.addEventListener('keypress', loginHandler);	
 	socket.on('message', function (data) {
 		var command = JSON.parse(data);
 		// Can attach username to command - i.e. command.user = userName so that you can detect who is saying it and put 'you' instead
@@ -67,6 +83,16 @@ function processCommand (command) {
 	}
 	if (command.type === 'error') {
 		newElement.innerText = command.content;
+	}
+	if (command.type === 'login') {
+		if (command.success) {
+			commandInput.removeEventListener('keypress', loginHandler);
+			commandInput.addEventListener('keypress', commandHandler);
+			name = command.name;
+			newElement.innerText = command.content;
+		} else {
+			newElement.innerText = command.content;
+		}
 	}
 	if (command.type === 'interval') {
 		newElement.innerText = command.content;
