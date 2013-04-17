@@ -27,6 +27,12 @@ function loadUser (messageEmitter, socket) {
 	var user = messageEmitter.user;
 	user.online = true;
 	user.socket = socket; // Need to find best way to do this but it works
+	/* 
+	 * SAS: Need to figure out way to push into gameMaster.users where there's
+	 * a key that isn't just a number but a name, ie. gM.users['balzario'] pulls
+	 * up Balzario's object (which we can then check socket id against for auth) 
+	 *
+	 */
 	gameMaster.users.push(user);
 
 	if (!user.roomId) {
@@ -135,10 +141,10 @@ gameserver.on('connection', function (socket) {
 	messageEmitter.on('password', function (data) {
 		var password = "secret";
 		if(password === data) {
-			console.log('Password correct!');
 			var message = {
 				"type": "password",
 				"success": true,
+				"socket": socket.id,
 				"content": "Log in successful!"
 			};
 			messageEmitter.emit('OUT', message);
@@ -154,6 +160,11 @@ gameserver.on('connection', function (socket) {
 	});
 
 	messageEmitter.on('say', function(data) {
+		/* 
+		 * SAS: Should consider adding 'say' into parser so only one place
+		 * that reviews commands
+		 *
+		 */
 		var user = messageEmitter.user;
 		var message = {
 			type: 'say',
@@ -179,6 +190,12 @@ gameserver.on('connection', function (socket) {
 			// User not logged in yet
 			return;
 		}
+		/* 
+		 * SAS: Here would check socket id sent from client to make sure matches
+		 * with socket id of user stored in gM
+		 *
+		 */
+		console.log(gameMaster.users);
 		Parser.command(messageEmitter, data, gameMaster);
 	});
 

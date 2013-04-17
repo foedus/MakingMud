@@ -5,10 +5,12 @@ var socket = new eio.Socket('ws://localhost:8083/');
 var newElement = document.createElement('div');
 contentDiv.appendChild(newElement);	
 
+// client globals
+var userSocket;
+
 // this is bad fix later
 var menu = false;
 var name = "";
-var loggedIn = false;
 
 commandInput.focus();
 	
@@ -30,7 +32,7 @@ function commandHandler (key) {
 			'type': 'login',
 			'data': commandInput.value
 		}
-	} else if (menu && name && !loggedIn) {
+	} else if (menu && name && !userSocket) {
 		var command = {
 			'type': 'password',
 			'data': commandInput.value
@@ -47,6 +49,10 @@ function commandHandler (key) {
 				'data': commandInput.value
 			}
 		}
+	}
+	// SAS: Adds socket to command sent to server for authentication checking
+	if(userSocket) {
+		command.userSocket = userSocket;
 	}
 	socket.send(JSON.stringify(command));
 	commandInput.value = '';
@@ -78,7 +84,6 @@ function processCommand (command) {
 	if (command.type === 'menu') {
 		if (command.success) {
 			menu = true;
-			
 			newElement.innerText = command.content;
 		}
 	}
@@ -91,10 +96,10 @@ function processCommand (command) {
 		}
 	}
 	if (command.type === 'password') {
-		console.dir(command);
 		if (command.success) {
 			// if provide correct password
 			loggedIn = true;
+			userSocket = command.socket;
 			newElement.innerText = command.content;
 		} else {
 			// if wrong password
