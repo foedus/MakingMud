@@ -5,6 +5,8 @@ var socket = new eio.Socket('ws://localhost:8083/');
 var newElement = document.createElement('div');
 contentDiv.appendChild(newElement);	
 
+// this is bad fix later
+var menu = false;
 var name = "";
 var loggedIn = false;
 
@@ -18,12 +20,17 @@ function commandHandler (key) {
 	// Forces scroll to bottom of div since user just entered text
 	contentDiv.scrollTop = contentDiv.scrollHeight;
 	// Sends data input to gameserver
-	if (!name || name === "") {
+	if (!menu) {
+		var command = {
+			"type": "menu",
+			"data": commandInput.value
+		}	
+	} else if (menu && name === "") {
 		var command = {
 			'type': 'login',
 			'data': commandInput.value
 		}
-	} else if (name && !loggedIn) {
+	} else if (menu && name && !loggedIn) {
 		var command = {
 			'type': 'password',
 			'data': commandInput.value
@@ -68,11 +75,29 @@ function processCommand (command) {
 	if (command.type === 'welcome') {
 		newElement.innerText = command.content;
 	}
+	if (command.type === 'menu') {
+		if (command.success) {
+			menu = true;
+			
+			newElement.innerText = command.content;
+		}
+	}
 	if (command.type === 'login') {
 		if (command.success) {
 			name = command.name;
 			newElement.innerText = command.content;
 		} else {
+			newElement.innerText = command.content;
+		}
+	}
+	if (command.type === 'password') {
+		console.dir(command);
+		if (command.success) {
+			// if provide correct password
+			loggedIn = true;
+			newElement.innerText = command.content;
+		} else {
+			// if wrong password
 			newElement.innerText = command.content;
 		}
 	}
@@ -91,6 +116,7 @@ function processCommand (command) {
 	}
 	if (command.type === 'logout') {
 		loggedIn = false;
+		name = "";
 		contentDiv.innerHTML = '';
 		newElement.innerText = command.content;
 		newElement.innerText = newElement.innerText + "\n" + "Refresh your browser to login again."

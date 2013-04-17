@@ -22,6 +22,51 @@ var gameserver = engine.listen(8083, function() {
 	console.log('Gameserver listening on port 8083...');
 });
 
+function loadUser (messageEmitter, socket) {
+	/* LOAD */
+	var user = messageEmitter.user;
+	user.online = true;
+	user.socket = socket; // Need to find best way to do this but it works
+	gameMaster.users.push(user);
+
+	if (!user.roomId) {
+		user.roomId = '512150235e8fbbd616000002' // put new users in TSC by default
+	}
+			
+	gameMaster.getRoom(user.roomId, function(err, room) {
+		if (err) {
+			return console.error(err);
+		}
+		if (!room) {
+			return console.log('User did not have a room.');
+		}
+		user.roomId = room._id;
+		user.save(function(err) {
+			if (err) {
+				return console.error(err);
+			}
+			// User is active, room is updated.
+			/* Now we send the first room message: */
+			var message = {
+				name: user.name,
+				type: 'room',
+				title: room.title,
+				description: room.description,
+				exits: room.getExits(),
+				who: room.getUsers(),
+			};
+			/*
+			We could do this in a user.setRoom method.
+			*/
+			messageEmitter.emit('OUT', message);
+			user.startUserLoop();
+			messageEmitter.user = user;
+			messageEmitter.room = room._id;
+			gameMaster.userRoomAction(user, messageEmitter.room, 'add');
+		});
+	});	
+}
+
 gameserver.on('connection', function (socket) {
 	var messageEmitter = new EventEmitter();
 	
@@ -29,6 +74,9 @@ gameserver.on('connection', function (socket) {
 	welcomeText = welcomeText + "//     Making Mud     " + "\n";
 	welcomeText = welcomeText + "//  (c) SAS/AFS 2013 " + "\n";
 	welcomeText = welcomeText + "//" + "\n" + "\n";
+	welcomeText = welcomeText + "Please select the following:" + "\n";
+	welcomeText = welcomeText + "1. Enter your name" + "\n";
+	welcomeText = welcomeText + "2. Create new player" + "\n";
 	var message = {
 		type: 'welcome',
 		content: welcomeText
@@ -43,6 +91,21 @@ gameserver.on('connection', function (socket) {
 		messageEmitter.emit(data.type, data.data);
 	});
 	
+	messageEmitter.on('menu', function(data) {
+		if (data === "1") {
+			// switch to login
+			var message = {
+				"type": "menu",
+				"success": true,
+				"content": "Please enter your name:"
+			};
+			messageEmitter.emit('OUT', message);
+		}
+		if (data === "2") {
+			// execute characterCreator()
+		}
+	});
+	
 	messageEmitter.on('login', function(data) {
 		User.findOne({name: data}, function(err, user) {
 			if (err) {
@@ -52,15 +115,10 @@ gameserver.on('connection', function (socket) {
 				console.log('User does not exist.');
 				var message = {
 					"type": "login",
-					"content": "Please try again!"
-				}
+					"content": "Name not found!"
+				};
 				return messageEmitter.emit('OUT', message);
 			}
-			
-			user.online = true;
-			user.socket = socket; // Need to find best way to do this but it works
-			gameMaster.users.push(user);
-			
 			// Tell the client that login succeeded
 			console.log('User found, login success.');
 			var message = {
@@ -69,43 +127,30 @@ gameserver.on('connection', function (socket) {
 				"name": user.name,
 				"content": "Please enter your password:"
 			}
+			messageEmitter.user = user;
 			messageEmitter.emit('OUT', message);
-			
-			if (!user.roomId) {
-				user.roomId = '512150235e8fbbd616000002' // put new users in TSC by default
-			}		
-			gameMaster.getRoom(user.roomId, function(err, room) {
-				if (err) {
-					return console.error(err);
-				}
-				if (!room) {
-					return console.log('User did not have a room.');
-				}
-				user.roomId = room._id;
-				user.save(function(err) {
-					if (err) {
-						return console.error(err);
-					}
-					// User is active, room is updated.
-					/* Now we send the first room message: */
-					var message = {
-						type: 'room',
-						title: room.title,
-						description: room.description,
-						exits: room.getExits(),
-						who: room.getUsers()
-					} 
-					/*
-					We could do this in a user.setRoom method.
-					*/
-					messageEmitter.emit('OUT', message);
-					user.startUserLoop();
-					messageEmitter.user = user;
-					messageEmitter.room = room._id;
-					gameMaster.userRoomAction(user, messageEmitter.room, 'add');
-				});
-			});	
-		});	
+		});
+	});
+
+	messageEmitter.on('password', function (data) {
+		var password = "secret";
+		if(password === data) {
+			console.log('Password correct!');
+			var message = {
+				"type": "password",
+				"success": true,
+				"content": "Log in successful!"
+			};
+			messageEmitter.emit('OUT', message);
+			loadUser(messageEmitter, socket);
+		} else {
+			console.log('Password incorrect!');
+			var message = {
+				"type": "password",
+				"content": "Please re-enter your password:"
+			};
+			messageEmitter.emit('OUT', message);
+		}		
 	});
 
 	messageEmitter.on('say', function(data) {
