@@ -119,6 +119,10 @@ function processCommand (command) {
 	if (command.type === 'error') {
 		newElement.innerText = command.content;
 	}
+	if (command.type === 'authError') {
+		// Do we reset logged in, etc., ie. act as logout?
+		newElement.innerText = command.content;
+	}
 	if (command.type === 'logout') {
 		loggedIn = false;
 		name = "";

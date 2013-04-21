@@ -26,14 +26,8 @@ function loadUser (messageEmitter, socket) {
 	/* LOAD */
 	var user = messageEmitter.user;
 	user.online = true;
-	user.socket = socket; // Need to find best way to do this but it works
-	/* 
-	 * SAS: Need to figure out way to push into gameMaster.users where there's
-	 * a key that isn't just a number but a name, ie. gM.users['balzario'] pulls
-	 * up Balzario's object (which we can then check socket id against for auth) 
-	 *
-	 */
-	gameMaster.users.push(user);
+	user.socket = socket;
+	gameMaster.users[user.name] = user;
 
 	if (!user.roomId) {
 		user.roomId = '512150235e8fbbd616000002' // put new users in TSC by default
@@ -94,11 +88,12 @@ gameserver.on('connection', function (socket) {
 		console.log('FROM THE SOCKET');
 		console.log(data);
 		data = JSON.parse(data);
-		messageEmitter.emit(data.type, data.data);
+		// In line below, how can we send userSocket as well? Or whole data object?
+		messageEmitter.emit(data.type, data);
 	});
 	
 	messageEmitter.on('menu', function(data) {
-		if (data === "1") {
+		if (data.data === "1") {
 			// switch to login
 			var message = {
 				"type": "menu",
@@ -107,13 +102,13 @@ gameserver.on('connection', function (socket) {
 			};
 			messageEmitter.emit('OUT', message);
 		}
-		if (data === "2") {
+		if (data.data === "2") {
 			// execute characterCreator()
 		}
 	});
 	
 	messageEmitter.on('login', function(data) {
-		User.findOne({name: data}, function(err, user) {
+		User.findOne({name: data.data}, function(err, user) {
 			if (err) {
 				return console.error(err);
 			}
@@ -140,7 +135,7 @@ gameserver.on('connection', function (socket) {
 
 	messageEmitter.on('password', function (data) {
 		var password = "secret";
-		if(password === data) {
+		if(password === data.data) {
 			var message = {
 				"type": "password",
 				"success": true,
@@ -169,7 +164,7 @@ gameserver.on('connection', function (socket) {
 		var message = {
 			type: 'say',
 			name: user.name,
-			content: data
+			content: data.data
 		};
 		console.log(messageEmitter.room);
 		gameMaster.getRoom(messageEmitter.room, function(err, room) {
@@ -190,13 +185,17 @@ gameserver.on('connection', function (socket) {
 			// User not logged in yet
 			return;
 		}
-		/* 
-		 * SAS: Here would check socket id sent from client to make sure matches
-		 * with socket id of user stored in gM
-		 *
-		 */
-		console.log(gameMaster.users);
-		Parser.command(messageEmitter, data, gameMaster);
+		// Authenticates entry
+		var user = messageEmitter.user;
+		if(data.userSocket != gameMaster['users'][user.name]['socket']['id']) {
+			// Do we need to unset user from gameMaster, stop heartbeat, etc.?
+			message = {
+				type: 'authError',
+				content: '**user not authenticated**'
+			};
+			return messageEmitter.emit('OUT', message);
+		}
+		Parser.command(messageEmitter, data.data, gameMaster);
 	});
 
 	messageEmitter.on('OUT', function(data) {
