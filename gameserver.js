@@ -88,7 +88,6 @@ gameserver.on('connection', function (socket) {
 		console.log('FROM THE SOCKET');
 		console.log(data);
 		data = JSON.parse(data);
-		// In line below, how can we send userSocket as well? Or whole data object?
 		messageEmitter.emit(data.type, data);
 	});
 	
