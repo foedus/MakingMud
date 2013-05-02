@@ -36,16 +36,9 @@ function commandHandler (key) {
 			'data': commandInput.value
 		}
 	} else {
-		if (/^'.*/.test(commandInput.value)) {
-			var command = {
-				'type': 'say',
-				'data': commandInput.value.slice(1)
-			}
-		} else {
-			var command = {
-				'type': 'command',
-				'data': commandInput.value
-			}
+		var command = {
+			'type': 'command',
+			'data': commandInput.value
 		}
 	}
 	// SAS: Adds socket to command sent to server for authentication checking

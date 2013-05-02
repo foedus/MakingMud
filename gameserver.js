@@ -153,31 +153,32 @@ gameserver.on('connection', function (socket) {
 		}		
 	});
 
-	messageEmitter.on('say', function(data) {
-		/* 
-		 * SAS: Should consider adding 'say' into parser so only one place
-		 * that reviews commands
-		 *
-		 */
-		var user = messageEmitter.user;
-		var message = {
-			type: 'say',
-			name: user.name,
-			content: data.data
-		};
-		console.log(messageEmitter.room);
-		gameMaster.getRoom(messageEmitter.room, function(err, room) {
-			if (err) {
-				return console.error(err);
-			}
-			if (!room) {
-				return console.log('No room found.');
-			}
-			room.users.forEach(function(user) {
-				user.socket.send(JSON.stringify(message));
-			});
-		});
-	});
+	// SAS NOTE: Moved this into parser
+	// messageEmitter.on('say', function(data) {
+	// 	/* 
+	// 	 * SAS: Should consider adding 'say' into parser so only one place
+	// 	 * that reviews commands
+	// 	 *
+	// 	 */
+	// 	var user = messageEmitter.user;
+	// 	var message = {
+	// 		type: 'say',
+	// 		name: user.name,
+	// 		content: data.data
+	// 	};
+	// 	console.log(messageEmitter.room);
+	// 	gameMaster.getRoom(messageEmitter.room, function(err, room) {
+	// 		if (err) {
+	// 			return console.error(err);
+	// 		}
+	// 		if (!room) {
+	// 			return console.log('No room found.');
+	// 		}
+	// 		room.users.forEach(function(user) {
+	// 			user.socket.send(JSON.stringify(message));
+	// 		});
+	// 	});
+	// });
 	
 	messageEmitter.on('command', function(data) {
 		if (!messageEmitter.user) {
