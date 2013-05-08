@@ -131,6 +131,9 @@ function processCommand (command) {
 		if(command.name == name) return;
 		newElement.innerText = command.content;
 	}
+	if (command.type === 'combat') {
+		newElement.innerText = command.content;
+	}	
 	newElement.innerText = newElement.innerText + '\n' + '>';
 	contentDiv.appendChild(newElement);
 	// Forces game client window to scroll to bottom of page when you are at the bottom of the page
