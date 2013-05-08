@@ -133,7 +133,7 @@ gameserver.on('connection', function (socket) {
 	});
 
 	messageEmitter.on('password', function (data) {
-		var password = "secret";
+		var password = "";
 		if(password === data.data) {
 			var message = {
 				"type": "password",

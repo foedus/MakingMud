@@ -46,10 +46,9 @@ userSchema.methods.healthRoom = function() {
 }
 
 userSchema.methods.healthUpdate = function(change) {
+	// console.log('HEALTH UPDATE!!!! for ' + change);
 	var self = this;
-	if (self.healthCurrent < self.healthMax) {
-		self.healthCurrent = Math.min(self.healthCurrent + change, self.healthMax);
-	}
+	self.healthCurrent = Math.min(self.healthCurrent + change, self.healthMax);
 	self.save();
 }
 
