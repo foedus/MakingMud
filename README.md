@@ -2,6 +2,7 @@ MakingMud
 =========
 
 Completed so far: 
+
 Built a Room object.
 Built a user object.
 Built movement verbs.
@@ -14,27 +15,27 @@ Enabling talking to room
 Converted to Mongoose
 Create admin system for room mapping.
 Fill out the user object with stats.
-
-To Do:
-Lock for a Mongo GUI like RockMongo.
 Implement proper scrolling in game client.
 Create db admin system to edit users and rooms.
+Created Monster Model.
+Created basic combat system.
+Created login/password/authentication.
+
+To Do:
+
+Look for a Mongo GUI like RockMongo.
+Update db admin to include new room fields and monster [Andrew]
 Use RegEx to abbreviate commands.
-Implement gameloop - setInterval.
-Create a monster object.
-Combat system.
-Proper login page/prompt.
+Implement gameloop in GameMaster to spawn Monsters + random Events.
+Spawn monster objects.
 Character creation system.
 Experience verbs - look, who, search...
 Complete logout system (logout on command prompt; logout due to inactivity, logout due to "fatal error", etc.)
-
-Things to ask:
-
-1. Why isn't socket obj showing on user when you print user even though you can see it when logging user.socket?
-
-2. What is a map and how do you scale the commands properly
-
-3. Running a gameloop?
+Implement death.
+Figure out removing and adding rooms and users to GameMaster dynamically.
+Implement inventory, items, and treasure.
+Spruce up combat system.
+Implement magic system.
 
 Gameloop:
 
