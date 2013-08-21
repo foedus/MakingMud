@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var Monster = require('../models/monsterModel'); // since using monster functions
 
 var roomSchema = mongoose.Schema({
 	title: String,
@@ -104,6 +105,14 @@ roomSchema.methods.getUsers = function() {
 		}
 	}
 	return userString;
+}
+
+roomSchema.methods.addMonster = function() {
+	// check to see if monster exists
+	// if no monster, roll percentage chance to spawn monster
+	// roll for each monster in array from least to most common until spawn succeeds
+	// if spawn roll succeeds check with gamemaster to see if population is exceeded for this monster
+	// if population ok, call spawnMonster from monsterModel
 }
 
 module.exports = mongoose.model('Room', roomSchema);

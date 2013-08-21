@@ -1,5 +1,6 @@
 MakingMud
 =========
+Game Development Site: https://sites.google.com/a/makingmud.com/mechanics/
 
 Completed so far: 
 
@@ -25,10 +26,10 @@ To Do:
 
 Look for a Mongo GUI like RockMongo.
 Update db admin to include new room fields and monster [Andrew]
-Use RegEx to abbreviate commands.
-Implement gameloop in GameMaster to spawn Monsters + random Events.
-Spawn monster objects.
-Character creation system.
+Use RegEx to abbreviate commands.[STU]
+Implement gameloop in GameMaster to spawn Monsters + random Events. 
+Spawn monster objects. [STU]
+Character creation system. [ANDREW]
 Experience verbs - look, who, search...
 Complete logout system (logout on command prompt; logout due to inactivity, logout due to "fatal error", etc.)
 Implement death.

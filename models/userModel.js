@@ -12,9 +12,12 @@ var userSchema = mongoose.Schema({
 	manaCurrent: Number,
 	stats: {
 		strength: Number,
+		constitution: Number,
 		agility: Number,
-		wisdom: Number,
-		intelligence: Number
+		aptitude: Number,
+		focus: Number,
+		logic: Number,
+		creativity: Number
 	},
 	inventory: Array,
 	abilities: Array,
