@@ -81,8 +81,8 @@ gameserver.on('connection', function(socket) {
 	// initialize commandState at menu, then shift
 	var commandState = "menu";
 	
-	if (commandState === "menu") {
-		messageEmitter.on('command', function(data) {
+	messageEmitter.on('command', function(data) {
+		if (commandState === "menu") {
 			if (data.data === "1") {
 				// switch to login
 				var message = {
@@ -95,12 +95,12 @@ gameserver.on('connection', function(socket) {
 			if (data.data === "2") {
 				console.log('--SWITCHING TO ROLLER--');
 				commandState = "roller";
+				messageEmitter.removeListener('command', function(err) {
+					if (!err) console.log('login listener removed by roller.');
+				});
 				return roller.newChar(messageEmitter, socket);
 			}
-		});
-	}; 
-	if (commandState === "login") {
-		messageEmitter.on('command', function(data) {
+		} else if (commandState === "login") {
 			User.findOne({name: data.data}, function(err, user) {
 				if (err) {
 					return console.error(err);
@@ -123,12 +123,9 @@ gameserver.on('connection', function(socket) {
 				}
 				messageEmitter.user = user;
 				messageEmitter.emit('OUT', message);
-				commandState = "password";
+				return commandState = "password";
 			});
-		});
-	}; 
-	if (commandState === "password") {
-		messageEmitter.on('command', function (data) {
+		} else if (commandState === "password") {
 			var password = "";
 			if (password === data.data) {
 				var message = {
@@ -138,28 +135,25 @@ gameserver.on('connection', function(socket) {
 					"content": "Log in successful!"
 				};
 				messageEmitter.emit('OUT', message);
+				commandState = "command";
 				loadUser(messageEmitter, socket);
 			} else {
 				console.log('Password incorrect!');
 				var message = {
 					"type": "password",
-					"content": "Incorrect. Please re-enter your password:"
+					"content": "Incorrect. Please re-enter your password:"					
 				};
 				messageEmitter.emit('OUT', message);
 			}		
-		});
-	} 
-	if (commandState === "command") {
-		// Handles all post-login commands in parser
-		
-		messageEmitter.on('command', function(data) {
+		} else if (commandState === "command") {
+			// Handles all post-login commands via parser
 			if (!messageEmitter.user) {
 				// User not logged in yet
 				return;
 			}
 			// Authenticates entry
 			var user = messageEmitter.user;
-			if(data.userSocket != gameMaster['users'][user.name]['socket']['id']) {
+			if (data.userSocket != gameMaster['users'][user.name]['socket']['id']) {
 				// Do we need to unset user from gameMaster, stop heartbeat, etc.?
 				message = {
 					type: 'authError',
@@ -167,9 +161,10 @@ gameserver.on('connection', function(socket) {
 				};
 				return messageEmitter.emit('OUT', message);
 			}
-			Parser.command(commandState, messageEmitter, data.data, gameMaster);
-		});
-	}
+			
+			Parser.command(messageEmitter, data.data, gameMaster);
+		}
+	});
 	
 	// Handle incoming messages from the client
 	socket.on('message', function(data) {
