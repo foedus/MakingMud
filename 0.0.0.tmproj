@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>models/monsterModel.js</string>
+	<string>lib/roller.js</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -26,9 +26,9 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>67</integer>
 				<key>line</key>
-				<integer>3</integer>
+				<integer>39</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -61,51 +61,21 @@
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>79</integer>
 		</dict>
 		<key>gameserver.js</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>17</integer>
+				<integer>9</integer>
 				<key>line</key>
-				<integer>62</integer>
-			</dict>
-			<key>columnSelection</key>
-			<false/>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>125</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>3</integer>
-				<key>line</key>
-				<integer>62</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>17</integer>
-				<key>line</key>
-				<integer>62</integer>
-			</dict>
-		</dict>
-		<key>lib/charactercreator.js</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>111</integer>
-				<key>line</key>
-				<integer>7</integer>
+				<integer>147</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>131</integer>
 		</dict>
 		<key>lib/gamemaster.js</key>
 		<dict>
@@ -119,51 +89,35 @@
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>4</integer>
+			<integer>0</integer>
 		</dict>
 		<key>lib/parser.js</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>45</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>3</integer>
+				<integer>0</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>60</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>42</integer>
-				<key>line</key>
-				<integer>3</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>46</integer>
-				<key>line</key>
-				<integer>3</integer>
-			</dict>
+			<integer>0</integer>
 		</dict>
-		<key>models/monsterModel.js</key>
+		<key>lib/roller.js</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>20</integer>
+				<integer>21</integer>
 				<key>line</key>
-				<integer>30</integer>
+				<integer>173</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>17</integer>
+			<integer>184</integer>
 		</dict>
 		<key>models/roomModel.js</key>
 		<dict>
@@ -202,7 +156,7 @@
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>22</integer>
+				<integer>8</integer>
 			</dict>
 			<key>columnSelection</key>
 			<false/>
@@ -213,16 +167,16 @@
 			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
-				<integer>28</integer>
+				<integer>21</integer>
 				<key>line</key>
-				<integer>25</integer>
+				<integer>11</integer>
 			</dict>
 			<key>selectTo</key>
 			<dict>
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>22</integer>
+				<integer>8</integer>
 			</dict>
 		</dict>
 		<key>package.json</key>
@@ -252,20 +206,6 @@
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
-		</dict>
-		<key>public/js/gameclient.js</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>0</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>81</integer>
 		</dict>
 		<key>views/users/edit.jade</key>
 		<dict>
@@ -312,26 +252,19 @@
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>public/js/gameclient.js</string>
-		<string>gameserver.js</string>
-		<string>lib/charactercreator.js</string>
-		<string>webserver.js</string>
-		<string>models/roomModel.js</string>
-		<string>README.md</string>
-		<string>package.json</string>
+		<string>lib/roller.js</string>
 		<string>passwordSpec.txt</string>
-		<string>controllers/roomCreator.js</string>
-		<string>views/users/edit.jade</string>
-		<string>views/users/form.jade</string>
-		<string>models/userModel.js</string>
-		<string>models/monsterModel.js</string>
-		<string>controllers/userCreator.js</string>
+		<string>gameserver.js</string>
+		<string>README.md</string>
 		<string>lib/gamemaster.js</string>
 		<string>lib/parser.js</string>
+		<string>controllers/roomCreator.js</string>
+		<string>models/userModel.js</string>
+		<string>controllers/userCreator.js</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{39, 124}, {1344, 1054}}</string>
+	<string>{{303, 74}, {1344, 1054}}</string>
 </dict>
 </plist>
