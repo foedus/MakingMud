@@ -21,6 +21,7 @@ Create db admin system to edit users and rooms.
 Created Monster Model.
 Created basic combat system.
 Created login/password/authentication.
+Created basic character creator.
 
 To Do:
 
@@ -29,7 +30,6 @@ Update db admin to include new room fields and monster [Andrew]
 Use RegEx to abbreviate commands.[STU]
 Implement gameloop in GameMaster to spawn Monsters + random Events. 
 Spawn monster objects. [STU]
-Character creation system. [ANDREW]
 Experience verbs - look, who, search...
 Complete logout system (logout on command prompt; logout due to inactivity, logout due to "fatal error", etc.)
 Implement death.
@@ -37,6 +37,7 @@ Figure out removing and adding rooms and users to GameMaster dynamically.
 Implement inventory, items, and treasure.
 Spruce up combat system.
 Implement magic system.
+Move all command parsing into game engine, take out of game client.
 
 Gameloop:
 
