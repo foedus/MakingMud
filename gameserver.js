@@ -4,13 +4,14 @@ var mongoose = require('mongoose');
 
 var GameMaster = require('./lib/gamemaster').GameMaster;
 var Parser = require('./lib/parser').Parser;
+var roller = require('./lib/roller').roller;
 var User = require('./models/userModel');
 
 // Connect to DB
 mongoose.connect('mongodb://localhost/MakingMud');
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function () {
+db.once('open', function() {
 	console.log('Mongoose connected!');
 });
 
@@ -67,140 +68,116 @@ function loadUser (messageEmitter, socket) {
 	});	
 }
 
-gameserver.on('connection', function (socket) {
+gameserver.on('connection', function(socket) {
 	var messageEmitter = new EventEmitter();
 	
-	var welcomeText = "//" + "\n";
-	welcomeText = welcomeText + "//     Making Mud     " + "\n";
-	welcomeText = welcomeText + "//  (c) SAS/AFS 2013 " + "\n";
-	welcomeText = welcomeText + "//" + "\n" + "\n";
-	welcomeText = welcomeText + "Please select the following:" + "\n";
-	welcomeText = welcomeText + "1. Enter your name" + "\n";
-	welcomeText = welcomeText + "2. Create new player" + "\n";
-	var message = {
-		type: 'welcome',
-		content: welcomeText
-	}
-	socket.send(JSON.stringify(message));
+	// BEGIN SETUP OF COMMAND PARSING
 	
-	socket.on('message', function (data) {
+	// Handles all outgoing messages from gameserver
+	messageEmitter.on('OUT', function(data) {
+		socket.send(JSON.stringify(data));
+	});
+	
+	// initialize commandState at menu, then shift
+	var commandState = "menu";
+	
+	if (commandState === "menu") {
+		messageEmitter.on('command', function(data) {
+			if (data.data === "1") {
+				// switch to login
+				var message = {
+					"type": "menu",
+					"content": "Please enter your name:"
+				};
+				messageEmitter.emit('OUT', message);
+				return commandState = "login";
+			}
+			if (data.data === "2") {
+				console.log('--SWITCHING TO ROLLER--');
+				commandState = "roller";
+				return roller.newChar(messageEmitter, socket);
+			}
+		});
+	}; 
+	if (commandState === "login") {
+		messageEmitter.on('command', function(data) {
+			User.findOne({name: data.data}, function(err, user) {
+				if (err) {
+					return console.error(err);
+				}
+				if (!user) {
+					console.log('User does not exist.');
+					var message = {
+						"type": "login",
+						"content": "Name not found! Please try again."
+					};
+					return messageEmitter.emit('OUT', message);
+				}
+				// Tell the client that login succeeded
+				console.log('User found, login success.');
+				var message = {
+					"type": "login",
+					"success": true,
+					"name": user.name,
+					"content": "Please enter your password:"
+				}
+				messageEmitter.user = user;
+				messageEmitter.emit('OUT', message);
+				commandState = "password";
+			});
+		});
+	}; 
+	if (commandState === "password") {
+		messageEmitter.on('command', function (data) {
+			var password = "";
+			if (password === data.data) {
+				var message = {
+					"type": "password",
+					"success": true,
+					"socket": socket.id,
+					"content": "Log in successful!"
+				};
+				messageEmitter.emit('OUT', message);
+				loadUser(messageEmitter, socket);
+			} else {
+				console.log('Password incorrect!');
+				var message = {
+					"type": "password",
+					"content": "Incorrect. Please re-enter your password:"
+				};
+				messageEmitter.emit('OUT', message);
+			}		
+		});
+	} 
+	if (commandState === "command") {
+		// Handles all post-login commands in parser
+		
+		messageEmitter.on('command', function(data) {
+			if (!messageEmitter.user) {
+				// User not logged in yet
+				return;
+			}
+			// Authenticates entry
+			var user = messageEmitter.user;
+			if(data.userSocket != gameMaster['users'][user.name]['socket']['id']) {
+				// Do we need to unset user from gameMaster, stop heartbeat, etc.?
+				message = {
+					type: 'authError',
+					content: '**user not authenticated**'
+				};
+				return messageEmitter.emit('OUT', message);
+			}
+			Parser.command(commandState, messageEmitter, data.data, gameMaster);
+		});
+	}
+	
+	// Handle incoming messages from the client
+	socket.on('message', function(data) {
 		console.log('---------------');
 		console.log('FROM THE SOCKET');
 		console.log(data);
 		data = JSON.parse(data);
 		messageEmitter.emit(data.type, data);
-	});
-	
-	messageEmitter.on('menu', function(data) {
-		if (data.data === "1") {
-			// switch to login
-			var message = {
-				"type": "menu",
-				"success": true,
-				"content": "Please enter your name:"
-			};
-			messageEmitter.emit('OUT', message);
-		}
-		if (data.data === "2") {
-			// execute characterCreator()
-		}
-	});
-	
-	messageEmitter.on('login', function(data) {
-		User.findOne({name: data.data}, function(err, user) {
-			if (err) {
-				return console.error(err);
-			}
-			if (!user) {
-				console.log('User does not exist.');
-				var message = {
-					"type": "login",
-					"content": "Name not found!"
-				};
-				return messageEmitter.emit('OUT', message);
-			}
-			// Tell the client that login succeeded
-			console.log('User found, login success.');
-			var message = {
-				"type": "login",
-				"success": true,
-				"name": user.name,
-				"content": "Please enter your password:"
-			}
-			messageEmitter.user = user;
-			messageEmitter.emit('OUT', message);
-		});
-	});
-
-	messageEmitter.on('password', function (data) {
-		var password = "";
-		if(password === data.data) {
-			var message = {
-				"type": "password",
-				"success": true,
-				"socket": socket.id,
-				"content": "Log in successful!"
-			};
-			messageEmitter.emit('OUT', message);
-			loadUser(messageEmitter, socket);
-		} else {
-			console.log('Password incorrect!');
-			var message = {
-				"type": "password",
-				"content": "Please re-enter your password:"
-			};
-			messageEmitter.emit('OUT', message);
-		}		
-	});
-
-	// SAS NOTE: Moved this into parser
-	// messageEmitter.on('say', function(data) {
-	// 	/* 
-	// 	 * SAS: Should consider adding 'say' into parser so only one place
-	// 	 * that reviews commands
-	// 	 *
-	// 	 */
-	// 	var user = messageEmitter.user;
-	// 	var message = {
-	// 		type: 'say',
-	// 		name: user.name,
-	// 		content: data.data
-	// 	};
-	// 	console.log(messageEmitter.room);
-	// 	gameMaster.getRoom(messageEmitter.room, function(err, room) {
-	// 		if (err) {
-	// 			return console.error(err);
-	// 		}
-	// 		if (!room) {
-	// 			return console.log('No room found.');
-	// 		}
-	// 		room.users.forEach(function(user) {
-	// 			user.socket.send(JSON.stringify(message));
-	// 		});
-	// 	});
-	// });
-	
-	messageEmitter.on('command', function(data) {
-		if (!messageEmitter.user) {
-			// User not logged in yet
-			return;
-		}
-		// Authenticates entry
-		var user = messageEmitter.user;
-		if(data.userSocket != gameMaster['users'][user.name]['socket']['id']) {
-			// Do we need to unset user from gameMaster, stop heartbeat, etc.?
-			message = {
-				type: 'authError',
-				content: '**user not authenticated**'
-			};
-			return messageEmitter.emit('OUT', message);
-		}
-		Parser.command(messageEmitter, data.data, gameMaster);
-	});
-
-	messageEmitter.on('OUT', function(data) {
-		// console.log(data);
-		socket.send(JSON.stringify(data));
 	});
 	
 	// Upon close of client window, run appropriate logout tasks
@@ -221,4 +198,21 @@ gameserver.on('connection', function (socket) {
 		console.log(gameMaster);		
 	});
 	
+	// END SETUP OF COMMAND PARSING
+	
+	// Send user a welcome message and launch game
+	var welcomeText = "//" + "\n";
+	welcomeText = welcomeText + "//     Making Mud     " + "\n";
+	welcomeText = welcomeText + "//  (c) SAS/AFS 2013 " + "\n";
+	welcomeText = welcomeText + "//" + "\n" + "\n";
+	welcomeText = welcomeText + "Please select the following:" + "\n";
+	welcomeText = welcomeText + "1. Existing character" + "\n";
+	welcomeText = welcomeText + "2. Create new character" + "\n";
+	var message = {
+		"type": "welcome",
+		"content": welcomeText
+	}
+	messageEmitter.emit('OUT', message);
 });
+
+exports.loadUser = loadUser;
