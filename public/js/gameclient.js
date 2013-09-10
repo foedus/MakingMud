@@ -132,41 +132,12 @@ function processCommand (command) {
 	newElement.innerText = newElement.innerText + '\n' + '>';
 	contentDiv.appendChild(newElement);
 	
-	// Forces game client window to scroll to bottom of page when you are at the bottom of the page
-	if ((contentDiv.scrollHeight - contentDiv.scrollTop - contentDiv.clientHeight) < 100) {
-		contentDiv.scrollTop = contentDiv.scrollHeight;
-	}
+	bottomScroll();
 };
 
-// For debugging the current state of the gameClient
-function checkState () {
-	var command;
-	
-	console.log('loggedIn: ' + loggedIn);
-	console.log('menu: ' + menu);
-	console.log('name: ' + name);
-	console.log('roller: ' + roller);
-	
-	if (!menu) {
-		var command = {
-			"type": "menu"
-		}	
-	} else if (menu && name === "" && !roller) {
-		var command = {
-			'type': 'login'
-		}
-	} else if (menu && roller) {
-		var command = {
-			'type': 'roller'
-		}
-	} else if (menu && name && !roller && !loggedIn) {
-		var command = {
-			'type': 'password'
-		}
-	} else {
-		var command = {
-			'type': 'command'
-		}
+function bottomScroll () {
+	// in theory, when you are near the bottom, content will autoScroll, when you are scrolled up it won't
+	if ((contentDiv.scrollHeight - contentDiv.scrollTop - contentDiv.clientHeight) < 300) {
+		contentDiv.scrollTop = contentDiv.scrollHeight;
 	}
-	console.dir('command: ' + command['type']);
 }
