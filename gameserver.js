@@ -145,7 +145,7 @@ gameserver.on('connection', function(socket) {
 				};
 				messageEmitter.emit('OUT', message);
 			}		
-		} else if (commandState === "command") {
+		} else {
 			// Handles all post-login commands via parser
 			if (!messageEmitter.user) {
 				// User not logged in yet
