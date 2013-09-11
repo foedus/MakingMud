@@ -16,6 +16,12 @@ db.once('open', function() {
 	console.log('Mongoose connected!');
 });
 
+// configure engine.io for heroku
+engine.configure(function () { 
+  engine.set("transports", ["xhr-polling"]); 
+  engine.set("polling duration", 10); 
+});
+
 // Initializes GameMaster
 var gameMaster = new GameMaster();
 
