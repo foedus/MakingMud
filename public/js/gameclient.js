@@ -1,6 +1,6 @@
 var commandInput = document.querySelector('#input > input');
 var contentDiv = document.querySelector('#content');
-var socket = new eio.Socket();
+var socket = new eio.Socket(window.location.hostname);
 
 var newElement = document.createElement('div');
 contentDiv.appendChild(newElement);	
