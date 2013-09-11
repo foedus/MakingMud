@@ -59,5 +59,5 @@ app.put('/users/:id', users.update);
 app.del('/users/:id', users.destroy);
 
 app.listen(process.env.PORT || 8080, function () {
-	console.log('Webserver running (local is on port 8080)...');
+	console.log('Webserver running on %d in %s mode', app.address().port, app.settings.env);
 });
