@@ -7,7 +7,7 @@ var User = require('./models/userModel');
 var Room = require('./models/roomModel');
 
 // Connect to db
-mongoose.connect('mongodb://localhost/MakingMud');
+mongoose.connect(process.env.MONGOHQ_URL || 'mongodb://localhost/MakingMud');
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
