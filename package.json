@@ -5,7 +5,7 @@
   "version": "0.0.0",
   "dependencies": {
 	"node": "0.8.8",
-    "npm":  "1.1.59"
+    "npm":  "1.1.59",
     "express": "3.0.6",
     "engine.io": "0.3.10",
     "mongodb": "1.2.8",
