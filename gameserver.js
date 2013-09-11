@@ -8,7 +8,8 @@ var roller = require('./lib/roller').roller;
 var User = require('./models/userModel');
 
 // Connect to DB
-mongoose.connect('mongodb://localhost/MakingMud');
+mongoose.connect(process.env.MONGOHQ_URL);
+// mongoose.connect('mongodb://localhost/MakingMud');
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
