@@ -58,6 +58,6 @@ app.get('/users/:id/edit', users.edit);
 app.put('/users/:id', users.update);
 app.del('/users/:id', users.destroy);
 
-app.listen(8080, function () {
-	console.log('Webserver running on port 8080...');
+app.listen(process.env.PORT || 8080, function () {
+	console.log('Webserver running (local is on port 8080)...');
 });

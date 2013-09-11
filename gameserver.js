@@ -7,8 +7,8 @@ var Parser = require('./lib/parser').Parser;
 var roller = require('./lib/roller').roller;
 var User = require('./models/userModel');
 
-// Connect to DB
-mongoose.connect(process.env.MONGOHQ_URL);
+// Connect to DB. EDIT 9/11 to work with Heroku
+mongoose.connect(process.env.MONGOHQ_URL || 'mongodb://localhost/MakingMud');
 // mongoose.connect('mongodb://localhost/MakingMud');
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -19,9 +19,9 @@ db.once('open', function() {
 // Initializes GameMaster
 var gameMaster = new GameMaster();
 
-// Starts gameserver
-var gameserver = engine.listen(8083, function() {
-	console.log('Gameserver listening on port 8083...');
+// Starts gameserver - EDIT 9/11 to work with Heroku
+var gameserver = engine.listen(process.env.PORT || 8083, function() {
+	console.log('Gameserver listening...');
 });
 
 function loadUser (messageEmitter, socket) {
