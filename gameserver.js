@@ -21,7 +21,7 @@ var gameMaster = new GameMaster();
 
 // Starts gameserver - EDIT 9/11 to work with Heroku
 var gameserver = engine.listen(process.env.PORT || 8083, function() {
-	console.log('Gameserver listening...');
+	console.log('Gameserver listening on %d in %s mode...', process.env.PORT || 8083, process.env.NODE_ENV);
 });
 
 function loadUser (messageEmitter, socket) {
