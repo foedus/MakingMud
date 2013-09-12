@@ -1,6 +1,8 @@
 var express = require('express');
+var http = require('http');
 var mongoose = require('mongoose');
 var jade = require('jade');
+var gameserver = require('./gameserver')
 
 // models
 var User = require('./models/userModel');
@@ -16,8 +18,24 @@ db.once('open', function () {
 
 var app = express();
 
+var server = http.createServer(app, function () {
+	console.log('HTTP Server created successfully.')
+});
+
+var engine = require('engine.io').listen(app, function () {
+	/* configure engine.io for heroku */
+	engine.configure(function () { 
+	  engine.set("transports", ["xhr-polling"]); 
+	  engine.set("polling duration", 10);
+	  engine.set("log level", 3)
+	});
+	console.log('Engine.io listening on %d', process.env.PORT || 8080);
+	gameserver.startGame();
+});
+
 app.configure(function() {
 	// app.set('views', __dirname + '/views');
+	app.set('port', process.env.PORT || 8080);
 	app.set('view engine', 'jade');
 	app.use(express.static(__dirname + '/public'));
 	app.use(function(req, res, next) {
@@ -58,6 +76,6 @@ app.get('/users/:id/edit', users.edit);
 app.put('/users/:id', users.update);
 app.del('/users/:id', users.destroy);
 
-app.listen(process.env.PORT || 8080, function () {
-	console.log('Webserver running on %d in %s mode', process.env.PORT || 8080, app.settings.env);
+server.listen(app.get('port'), function () {
+	console.log('Webserver running on %d in %s mode', app.get('port'), app.settings.env);
 });
