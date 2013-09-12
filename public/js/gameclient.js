@@ -1,6 +1,6 @@
 var commandInput = document.querySelector('#input > input');
 var contentDiv = document.querySelector('#content');
-var socket = new eio.Socket({transports: ['polling']});
+var socket = new eio.Socket('http://localhost:8080');
 
 var newElement = document.createElement('div');
 contentDiv.appendChild(newElement);	

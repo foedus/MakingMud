@@ -1,5 +1,5 @@
 var express = require('express');
-var http = require('http');
+var engine = require('engine.io');
 var mongoose = require('mongoose');
 var jade = require('jade');
 var gameserver = require('./gameserver')
@@ -18,19 +18,12 @@ db.once('open', function () {
 
 var app = express();
 
-var server = http.createServer(app, function () {
-	console.log('HTTP Server created successfully.')
-});
+var http = require('http').createServer(app).listen(8080);
+var server = engine.attach(http);
 
-var engine = require('engine.io').listen(app, function () {
-	/* configure engine.io for heroku */
-	engine.configure(function () { 
-	  engine.set("transports", ["xhr-polling"]); 
-	  engine.set("polling duration", 10);
-	  engine.set("log level", 3)
-	});
+engine.listen(app, function () {
 	console.log('Engine.io listening on %d', process.env.PORT || 8080);
-	gameserver.startGame();
+	gameserver.startGame(engine);
 });
 
 app.configure(function() {
@@ -76,6 +69,6 @@ app.get('/users/:id/edit', users.edit);
 app.put('/users/:id', users.update);
 app.del('/users/:id', users.destroy);
 
-server.listen(app.get('port'), function () {
+/* server.listen(app.get('port'), function () {
 	console.log('Webserver running on %d in %s mode', app.get('port'), app.settings.env);
-});
+}); */
