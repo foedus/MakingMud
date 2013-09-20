@@ -1,12 +1,12 @@
-var express = require('express');
-var engine = require('engine.io');
-var mongoose = require('mongoose');
-var jade = require('jade');
-var gameserver = require('./gameserver');
+var express = require('express')
+  ,	engine = require('engine.io')
+  ,	mongoose = require('mongoose')
+  ,	jade = require('jade')
+  ,	gameserver = require('./gameserver');
 
 // models
-var User = require('./models/userModel');
-var Room = require('./models/roomModel');
+var User = require('./models/userModel')
+  ,	Room = require('./models/roomModel');
 
 // Connect to db
 mongoose.connect(process.env.MONGOHQ_URL || 'mongodb://localhost/MakingMud');
@@ -16,11 +16,10 @@ db.once('open', function () {
 	console.log('Mongoose connected!');
 });
 
+// Create express app and set engine.io to intercept requests to the http server
 var app = express();
-
 var http = require('http').createServer(app).listen(process.env.PORT || 8080);
 var server = engine.attach(http);
-
 engine.listen(app, function () {
 	console.log('Engine.io listening on %d', process.env.PORT || 8080);
 	gameserver.startGame(server);
@@ -41,6 +40,7 @@ app.configure(function() {
 	app.use(app.router);
 });
 
+// Basic routes
 app.get('/', function(req,res) {
 	res.sendfile(__dirname + '/views/index.html');
 });
@@ -68,7 +68,3 @@ app.get('/users/:id', users.show);
 app.get('/users/:id/edit', users.edit);
 app.put('/users/:id', users.update);
 app.del('/users/:id', users.destroy);
-
-/* server.listen(app.get('port'), function () {
-	console.log('Webserver running on %d in %s mode', app.get('port'), app.settings.env);
-}); */

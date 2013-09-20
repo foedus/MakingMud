@@ -1,22 +1,10 @@
-var engine = require('engine.io');
-var EventEmitter = require('events').EventEmitter;
-// var mongoose = require('mongoose');
+var	EventEmitter = require('events').EventEmitter
 
-var GameMaster = require('./lib/gamemaster').GameMaster;
-var Parser = require('./lib/parser').Parser;
-var roller = require('./lib/roller').roller;
-var User = require('./models/userModel');
-var Room = require('./models/roomModel');
-
-/* Connect to DB. EDIT 9/11 to work with Heroku
-mongoose.connect(process.env.MONGOHQ_URL || 'mongodb://localhost/MakingMud');
-// mongoose.connect('mongodb://localhost/MakingMud');
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
-	console.log('Mongoose connected!');
-});
-*/
+  , GameMaster = require('./lib/gamemaster').GameMaster
+  ,	Parser = require('./lib/parser').Parser
+  , roller = require('./lib/roller').roller
+  , User = require('./models/userModel')
+  , Room = require('./models/roomModel');
 
 // Initializes GameMaster
 var gameMaster = new GameMaster();
@@ -32,6 +20,8 @@ function startGame (engine) {
 		user.online = true;
 		user.socket = socket;
 		gameMaster.users[user.name] = user;
+		console.log("From loadUser function: ");
+		console.log(gameMaster.users);
 
 		if (!user.roomId) {
 			Room.findOne({'title':'Town Square Central'}, function (err, room) {
