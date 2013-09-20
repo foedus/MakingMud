@@ -138,7 +138,7 @@ function startGame (engine) {
 					};
 					messageEmitter.emit('OUT', message);
 					commandState = "command";
-					loadUser(messageEmitter, socket);
+					self.loadUser(messageEmitter, socket);
 				} else {
 					console.log('Password incorrect!');
 					var message = {
