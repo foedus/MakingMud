@@ -38,7 +38,7 @@ function startGame (engine) {
 				if (err) {
 					return console.error(err);
 				}
-				user.roomId = room.id; // put new users in TSC by default, wait to get right ID and callback
+				user.roomId = room.id; // put new users in TSC by default, wait to get TSC ID and callback
 				
 				gameMaster.getRoom(user.roomId, function(err, room) {
 					if (err) {
@@ -220,11 +220,10 @@ function startGame (engine) {
 	
 		// Upon close of client window, run appropriate logout tasks
 		socket.on('close', function () {
+			var user = messageEmitter.user;
 			console.log('---------------');
 			console.log('FROM THE SOCKET');
 			console.log(user.name + " has left the game.");
-			var user = messageEmitter.user;
-			
 			// clearInterval(user.intId);
 			// Takes user out of gameMaster
 			gameMaster.users.splice(gameMaster.users.indexOf(user), 1);
