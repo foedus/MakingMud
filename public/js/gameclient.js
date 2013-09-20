@@ -3,7 +3,7 @@ var contentDiv = document.querySelector('#content');
 var socket = new eio.Socket();
 
 var newElement = document.createElement('div');
-contentDiv.appendChild(newElement);	
+contentDiv.appendChild(newElement);
 
 commandInput.focus();
 	
