@@ -22,7 +22,6 @@ var roomSchema = mongoose.Schema({
 	users: Array,
 	potentialMonsters: Array, // array of objects with monster name and spawn % 
 	currentMonsters: Array // monsters currently alive in the room
-	
 });
 
 /* Following two functions are to demonstrate who is in room and online;
