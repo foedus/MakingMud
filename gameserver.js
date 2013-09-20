@@ -179,7 +179,11 @@ function startGame (engine) {
 	
 		// Upon close of client window, run appropriate logout tasks
 		socket.on('close', function () {
+			console.log('---------------');
+			console.log('FROM THE SOCKET');
+			console.log(user.name + " has left the game.");
 			var user = messageEmitter.user;
+			
 			// clearInterval(user.intId);
 			// Takes user out of gameMaster
 			gameMaster.users.splice(gameMaster.users.indexOf(user), 1);
