@@ -215,5 +215,5 @@ function startGame (engine) {
 	});
 }
 
-exports.loadUser = startGame.loadUser;
+// exports.loadUser = startGame.loadUser;
 exports.startGame = startGame;
