@@ -28,11 +28,10 @@ var userSchema = mongoose.Schema({
 
 userSchema.methods.startUserLoop = function() {
 	var self = this;
-	self.intId = setInterval(function() {
+	self.intervalId = setInterval(function() {
 		console.log(self.name + ' heartbeat ping.');
 		self.healthRoom();
 		self.manaRoom();
-		// self.manaRoom();
 		// self.incrementSpells();
 	}, 5000);
 }
