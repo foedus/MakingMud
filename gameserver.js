@@ -6,6 +6,7 @@ var GameMaster = require('./lib/gamemaster').GameMaster;
 var Parser = require('./lib/parser').Parser;
 var roller = require('./lib/roller').roller;
 var User = require('./models/userModel');
+var Room = require('./models/roomModel');
 
 /* Connect to DB. EDIT 9/11 to work with Heroku
 mongoose.connect(process.env.MONGOHQ_URL || 'mongodb://localhost/MakingMud');
@@ -33,41 +34,81 @@ function startGame (engine) {
 		gameMaster.users[user.name] = user;
 
 		if (!user.roomId) {
-			user.roomId = '523bb238d58b2c0200000002' // put new users in TSC by default
-		}
-			
-		gameMaster.getRoom(user.roomId, function(err, room) {
-			if (err) {
-				return console.error(err);
-			}
-			if (!room) {
-				return console.log('User did not have a room.');
-			}
-			user.roomId = room._id;
-			user.save(function(err) {
+			Room.findOne({'title':'Town Square Central'}, function (err, room) {
 				if (err) {
 					return console.error(err);
 				}
-				// User is active, room is updated.
-				/* Now we send the first room message: */
-				var message = {
-					name: user.name,
-					type: 'room',
-					title: room.title,
-					description: room.description,
-					exits: room.getExits(),
-					who: room.getUsers(),
-				};
-				/*
-				We could do this in a user.setRoom method.
-				*/
-				messageEmitter.emit('OUT', message);
-				user.startUserLoop();
-				messageEmitter.user = user;
-				messageEmitter.room = room._id;
-				gameMaster.userRoomAction(user, messageEmitter.room, 'add');
-			});
-		});	
+				user.roomId = room.id; // put new users in TSC by default, wait to get right ID and callback
+				
+				gameMaster.getRoom(user.roomId, function(err, room) {
+					if (err) {
+						return console.error(err);
+					}
+					if (!room) {
+						return console.log('User did not have a room.');
+					}
+					user.roomId = room._id;
+					user.save(function(err) {
+						if (err) {
+							return console.error(err);
+						}
+						// User is active, room is updated.
+						/* Now we send the first room message: */
+						var message = {
+							name: user.name,
+							type: 'room',
+							title: room.title,
+							description: room.description,
+							exits: room.getExits(),
+							who: room.getUsers(),
+						};
+						/*
+						We could do this in a user.setRoom method.
+						*/
+						messageEmitter.emit('OUT', message);
+						user.startUserLoop();
+						messageEmitter.user = user;
+						messageEmitter.room = room._id;
+						gameMaster.userRoomAction(user, messageEmitter.room, 'add');
+					});
+				});		
+			})
+		} 
+		else // USER ALREADY HAS A ROOM. NOT DRY, FIX LATER
+		{ 	
+			gameMaster.getRoom(user.roomId, function(err, room) {
+				if (err) {
+					return console.error(err);
+				}
+				if (!room) {
+					return console.log('User did not have a room.');
+				}
+				user.roomId = room._id;
+				user.save(function(err) {
+					if (err) {
+						return console.error(err);
+					}
+					// User is active, room is updated.
+					/* Now we send the first room message: */
+					var message = {
+						name: user.name,
+						type: 'room',
+						title: room.title,
+						description: room.description,
+						exits: room.getExits(),
+						who: room.getUsers(),
+					};
+					/*
+					We could do this in a user.setRoom method.
+					*/
+					messageEmitter.emit('OUT', message);
+					user.startUserLoop();
+					messageEmitter.user = user;
+					messageEmitter.room = room._id;
+					gameMaster.userRoomAction(user, messageEmitter.room, 'add');
+				});
+			});	
+		}
 	}
 
 	engine.on('connection', function(socket) {
