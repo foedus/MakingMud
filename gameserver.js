@@ -220,13 +220,19 @@ function startGame (engine) {
 	
 		// Upon close of client window, run appropriate logout tasks
 		socket.on('close', function () {
+			if (!messageEmitter.user) {
+				console.log('---------------');
+				console.log('FROM THE SOCKET');
+				console.log("Someone quit from the menus.");
+				return false;
+			}
 			var user = messageEmitter.user;
 			console.log('---------------');
 			console.log('FROM THE SOCKET');
 			console.log(user.name + " has left the game.");
-			// clearInterval(user.intId);
+			clearInterval(user.intervalId);
 			// Takes user out of gameMaster
-			gameMaster.users.splice(gameMaster.users.indexOf(user), 1);
+			delete gameMaster.users[user.name];
 			// Takes user out of room in gameMaster
 			gameMaster.userRoomAction(user, messageEmitter.room, 'remove');
 			// Sets user online flag to 'false' so db also knows user no longer playing
@@ -236,7 +242,7 @@ function startGame (engine) {
 					return console.error(err);
 				}		
 			});
-			console.log(gameMaster);		
+			console.log(gameMaster.users);		
 		});
 	
 		// END SETUP OF COMMAND PARSING
