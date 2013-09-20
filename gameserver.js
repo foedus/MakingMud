@@ -33,7 +33,7 @@ function startGame (engine) {
 		gameMaster.users[user.name] = user;
 
 		if (!user.roomId) {
-			user.roomId = '512150235e8fbbd616000002' // put new users in TSC by default
+			user.roomId = '523bb238d58b2c0200000002' // put new users in TSC by default
 		}
 			
 		gameMaster.getRoom(user.roomId, function(err, room) {
