@@ -23,7 +23,7 @@ var server = engine.attach(http);
 
 engine.listen(app, function () {
 	console.log('Engine.io listening on %d', process.env.PORT || 8080);
-	gameserver.startGame(engine);
+	gameserver.startGame(server);
 });
 
 app.configure(function() {
