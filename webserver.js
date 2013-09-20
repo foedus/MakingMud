@@ -2,7 +2,7 @@ var express = require('express');
 var engine = require('engine.io');
 var mongoose = require('mongoose');
 var jade = require('jade');
-var gameserver = require('./gameserver')
+var gameserver = require('./gameserver');
 
 // models
 var User = require('./models/userModel');
@@ -18,7 +18,7 @@ db.once('open', function () {
 
 var app = express();
 
-var http = require('http').createServer(app).listen(8080);
+var http = require('http').createServer(app).listen(process.env.PORT || 8080);
 var server = engine.attach(http);
 
 engine.listen(app, function () {

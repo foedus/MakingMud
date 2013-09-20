@@ -18,12 +18,14 @@ db.once('open', function() {
 */
 
 // Initializes GameMaster
-var gameMaster = new GameMaster();
+
 
 // Starts gameserver
 function startGame (engine) {
 	console.log('Gameserver launched by webserver...');
 	var self = this;
+	
+	var gameMaster = new GameMaster();
 	
 	self.loadUser = function (messageEmitter, socket) {
 		/* LOAD */
