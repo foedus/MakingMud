@@ -20,6 +20,7 @@ function startGame (engine) {
 		user.online = true;
 		user.socket = socket;
 		gameMaster.users[user.name] = user;
+		gameMaster.sockets.push(socket);
 		console.log("From loadUser function: ");
 		console.log(gameMaster.users);
 
@@ -221,6 +222,8 @@ function startGame (engine) {
 			console.log('FROM THE SOCKET');
 			console.log(user.name + " has left the game.");
 			clearInterval(user.intervalId);
+			// Clear socket from gameMaster
+			gameMaster.sockets.splice(socket, 1);
 			// Takes user out of gameMaster
 			delete gameMaster.users[user.name];
 			// Takes user out of room in gameMaster
@@ -232,7 +235,7 @@ function startGame (engine) {
 					return console.error(err);
 				}		
 			});
-			console.log(gameMaster.users);		
+			console.log(gameMaster);		
 		});
 	
 		// END SETUP OF COMMAND PARSING
