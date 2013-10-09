@@ -22,6 +22,7 @@ Created Monster Model.
 Created basic combat system.
 Created login/password/authentication.
 Created basic character creator.
+Spruce up combat.
 
 To Do:
 
@@ -35,9 +36,18 @@ Complete logout system (logout on command prompt; logout due to inactivity, logo
 Implement death.
 Figure out removing and adding rooms and users to GameMaster dynamically.
 Implement inventory, items, and treasure.
-Spruce up combat system.
 Implement magic system.
 Move all command parsing into game engine, take out of game client.
+Implement class/profession.
+Implement EXP.
+Make more rooms.
+Come up with a plot.
+Update RoomTalk/UserTalk/WorldTalk to one function.
+Implement in-game GMs.
+Give rooms and users friendly Ids.
+Implement non-direction exits.
+Handle text input on phone.
+
 
 Gameloop:
 
